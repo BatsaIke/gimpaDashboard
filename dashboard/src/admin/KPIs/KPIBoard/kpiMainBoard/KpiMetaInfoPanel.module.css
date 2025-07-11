@@ -1,0 +1,170 @@
+.rightColInner {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.infoSection {
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.infoSection:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.sectionTitle {
+  margin: 0 0 1rem 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #002F5F;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.icon {
+  font-size: 0.9rem;
+  color: #2CA85C;
+}
+
+.infoText {
+  margin: 0.5rem 0 0.5rem 1.75rem;
+  font-size: 0.95rem;
+  color: #4B5563;
+  line-height: 1.6;
+}
+
+.infoTextLink {
+  color: #2CA85C;
+  text-decoration: none;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.infoTextLink:hover {
+  color: #23994C;
+  text-decoration: underline;
+}
+
+/* Lists */
+.priorityList, 
+.departmentList, 
+.roleList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-left: 1.75rem;
+}
+
+.priorityItem,
+.departmentItem,
+.roleItem {
+  padding: 0.35rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.priorityItem {
+  background: #EFF6FF;
+  color: #1E40AF;
+}
+
+.departmentItem {
+  background: #ECFDF5;
+  color: #065F46;
+}
+
+.roleItem {
+  background: #F3F4F6;
+  color: #4B5563;
+}
+
+/* Assignee list */
+.assigneeList {
+  margin-left: 1.75rem;
+}
+
+.assigneeItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.assigneeItem:last-child {
+  border-bottom: none;
+}
+
+.assigneeAvatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #2CA85C;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.assigneeName {
+  font-size: 0.95rem;
+  color: #1F2937;
+}
+
+.assigneeEmail {
+  font-size: 0.8rem;
+  color: #6B7280;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .rightColInner {
+    gap: 1.5rem;
+  }
+  
+  .infoSection {
+    padding-bottom: 1.25rem;
+  }
+  
+  .sectionTitle {
+    font-size: 0.9rem;
+  }
+  
+  .infoText {
+    font-size: 0.9rem;
+    margin-left: 1.5rem;
+  }
+  
+  .priorityList,
+  .departmentList,
+  .roleList,
+  .assigneeList {
+    margin-left: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .sectionTitle {
+    font-size: 0.85rem;
+  }
+  
+  .infoText {
+    font-size: 0.85rem;
+  }
+  
+  .priorityItem,
+  .departmentItem,
+  .roleItem {
+    font-size: 0.8rem;
+  }
+}

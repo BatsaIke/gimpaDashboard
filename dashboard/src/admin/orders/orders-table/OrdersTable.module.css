@@ -1,0 +1,39 @@
+/* OrdersTable.module.css */
+.ordersTable {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .ordersTable th,
+  .ordersTable td {
+    text-align: left;
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .detailsButton {
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .detailsButton:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Responsive design adjustments */
+  @media (max-width: 768px) {
+    .ordersTableWrapper {
+      overflow-x: auto; /* Allows table to scroll horizontally */
+      margin: 20px -16px; /* Adjust based on your layout */
+    }
+  
+    /* Adjust font sizes for smaller screens if necessary */
+    .ordersTable th,
+    .ordersTable td {
+      padding: 8px 4px; /* Smaller padding */
+    }
+  }
+  

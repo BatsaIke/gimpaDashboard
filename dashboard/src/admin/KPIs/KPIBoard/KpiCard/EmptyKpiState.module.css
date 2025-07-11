@@ -1,0 +1,102 @@
+/* src/components/KPIBoard/EmptyKpiState/EmptyKpiState.module.css */
+.emptyState {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+  width: 100%;
+  padding: 2rem;
+}
+
+.glassCard {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  border-radius: 20px;
+  padding: 2.5rem;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  background: rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+  overflow: hidden;
+  text-align: center;
+}
+
+.glassOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.4) 0%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
+  z-index: -1;
+}
+
+.content {
+  position: relative;
+  z-index: 2;
+}
+
+.content h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 0.75rem;
+}
+
+.content p {
+  color: #4a5568;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+.createButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 50px;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  transition: all 0.3s ease;
+}
+
+.createButton:hover {
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+  transform: translateY(-2px);
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .glassCard {
+    padding: 2rem;
+  }
+  
+  .content h3 {
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .glassCard {
+    padding: 1.5rem;
+  }
+  
+  .content h3 {
+    font-size: 1.2rem;
+  }
+  
+  .createButton {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+  }
+}

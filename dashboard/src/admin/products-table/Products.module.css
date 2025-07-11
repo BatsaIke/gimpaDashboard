@@ -1,0 +1,146 @@
+.productsContainer {
+  /* Offsets for your fixed header & sidebar */
+  margin-top: 94px;     /* Header height */
+  margin-left: 250px;   /* Sidebar width */
+  padding: 20px;
+  background-color: #f9f9f9;
+  min-height: calc(100vh - 94px);
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+.pageTitle {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.noProducts {
+  margin-top: 20px;
+  font-size: 1rem;
+  color: #666;
+}
+
+/*************************************
+   PAGINATION
+*************************************/
+.pagination {
+  margin-top: 20px;
+  display: flex;
+  gap: 4px;           /* small space between buttons */
+  justify-content: flex-end; /* align to the far right */
+}
+
+.pageBtn,
+.pageBtnActive {
+  border: 1px solid #ccc;
+  background-color: #fff;
+  color: #333;
+  padding: 4px 8px;  /* smaller buttons */
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 0.8rem; /* smaller text */
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+}
+
+.pageBtnActive {
+  background-color: #16cb7f;
+  color: #fff;
+  border-color: #16cb7f;
+}
+
+.pageBtn:hover {
+  background-color: #eee;
+}
+
+/* Responsive Layout for Products */
+
+/* Adjust for medium screens (e.g., tablets) */
+@media (max-width: 992px) {
+  .productsContainer {
+    margin-left: 200px; /* Shrink sidebar width */
+    margin-top: 80px; /* Shrink header height */
+    padding: 15px;
+  }
+
+  .pageTitle {
+    font-size: 1.3rem; /* Slightly smaller title */
+  }
+
+  .pagination {
+    justify-content: center; /* Center align for better fit */
+    gap: 8px;
+  }
+
+  .pageBtn,
+  .pageBtnActive {
+    padding: 6px 10px; /* Slightly larger buttons for medium screens */
+    font-size: 0.85rem; /* Adjust font size */
+  }
+}
+
+/* Adjust for small screens (e.g., mobile phones) */
+@media (max-width: 768px) {
+  .productsContainer {
+    margin-left: 0; /* Remove sidebar offset */
+    margin-top: 60px; /* Shrink header height further */
+    padding: 10px;
+    flex-direction: column; /* Stack content vertically */
+  }
+
+  .pageTitle {
+    font-size: 1.1rem; /* Smaller font size for the title */
+    text-align: center; /* Center-align title for a balanced layout */
+  }
+
+  .noProducts {
+    font-size: 0.9rem; /* Adjust font size for mobile */
+    text-align: center; /* Center-align for readability */
+  }
+
+  .pagination {
+    justify-content: center;
+    gap: 6px; /* Reduce spacing between buttons */
+  }
+
+  .pageBtn,
+  .pageBtnActive {
+    padding: 5px 8px; /* Smaller buttons for mobile */
+    font-size: 0.75rem; /* Reduce font size */
+  }
+
+  .productsTable td {
+    padding-left: 40%; /* Adjust for smaller screens */
+  }
+
+  .productsTable td:before {
+    left: 5px; /* Reduce padding for labels */
+    width: 35%; /* Adjust label width */
+  }
+
+  .deleteBtn {
+    font-size: 0.9rem; /* Slightly smaller icon for mobile */
+  }
+}
+
+/* Extra small screens (e.g., very small mobile devices) */
+@media (max-width: 576px) {
+  .productsContainer {
+    padding: 5px; /* Reduce padding for very small screens */
+  }
+
+  .pageTitle {
+    font-size: 1rem; /* Further reduce font size */
+  }
+
+  .productsTable td {
+    padding-left: 30%; /* Adjust padding further */
+  }
+
+  .productsTable td:before {
+    left: 5px;
+    width: 30%;
+  }
+}

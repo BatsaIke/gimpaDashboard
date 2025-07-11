@@ -1,0 +1,231 @@
+.ordersContainer {
+    margin-top: 94px; /* Adjust to the height of the fixed header */
+    margin-left: 250px; /* Adjust to the width of the sidebar */
+    padding: 20px;
+    background-color: #f9f9f9;
+    min-height: calc(100vh - 94px); /* Ensures the content area adapts to viewport height */
+    box-sizing: border-box;
+  }
+  
+  .ordersPage {
+    font-family: Arial, sans-serif;
+  }
+  
+  .header {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  .tableWrapper {
+    overflow-x: auto;
+  }
+  
+  .ordersTable {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .ordersTable th,
+  .ordersTable td {
+    text-align: left;
+    padding: 12px 15px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .ordersTable th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+  }
+  
+  .ordersTable tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .ordersTable tbody tr:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .statusSelect {
+    padding: 6px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    cursor: pointer;
+    background-color: transparent;
+  }
+  
+  .statusSelect.pending {
+    color: #ffc107;
+  }
+  
+  .statusSelect.confirmed {
+    color: #28a745;
+  }
+  
+  .statusSelect.cancelled {
+    color: #dc3545;
+  }
+  
+  .spinner {
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .ordersHeader {
+    display: flex;
+    justify-content: space-between; /* Space between Orders and Filter */
+    align-items: center; /* Align vertically */
+    margin-bottom: 20px;
+  }
+  
+  .filterContainer {
+    display: flex;
+    align-items: center; /* Vertically align label and dropdown */
+    gap: 8px; /* Add space between label and select */
+  }
+  
+  .filterLabel {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-right: 8px;
+  }
+  
+  .filterSelect {
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    background-color: #fff;
+    cursor: pointer;
+  }
+  
+@media (max-width: 768px) {
+    .ordersContainer {
+      margin-left: 0; /* Remove sidebar margin on mobile */
+      padding: 15px; /* Reduce padding for smaller screens */
+    }
+  }
+  
+  .ordersPage {
+    font-family: Arial, sans-serif;
+  }
+  
+  .header {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center; /* Center header for better readability on mobile */
+  }
+  
+  .tableWrapper {
+    overflow-x: auto; /* Enable horizontal scrolling for small screens */
+  }
+  
+  .ordersTable {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .ordersTable th,
+  .ordersTable td {
+    text-align: left;
+    padding: 12px 15px;
+    border-bottom: 1px solid #ddd;
+    font-size: 0.9rem; /* Adjust font size for better readability */
+  }
+  
+  @media (max-width: 768px) {
+    .ordersTable th,
+    .ordersTable td {
+      font-size: 0.85rem; /* Slightly smaller font for mobile */
+      padding: 10px 12px; /* Adjust padding */
+    }
+  }
+  
+  .ordersTable th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+  }
+  
+  @media (max-width: 576px) {
+    .ordersTable th,
+    .ordersTable td {
+      font-size: 0.75rem; /* Further reduce font size for very small screens */
+      padding: 8px 10px; /* Optimize padding for mobile */
+    }
+  }
+  
+  .ordersTable tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .ordersTable tbody tr:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .statusSelect {
+    padding: 6px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    cursor: pointer;
+    background-color: transparent;
+    width: 100%; /* Make the select dropdown take full width on smaller screens */
+  }
+  
+  @media (max-width: 576px) {
+    .statusSelect {
+      font-size: 0.8rem; /* Adjust font size for very small screens */
+      padding: 4px 8px;
+    }
+  }
+  
+  .statusSelect.pending {
+    color: #ffc107;
+  }
+  
+  .statusSelect.confirmed {
+    color: #28a745;
+  }
+  
+  .statusSelect.cancelled {
+    color: #dc3545;
+  }
+  
+  .spinner {
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  /* Responsive Adjustments */
+  @media (max-width: 768px) {
+    .ordersTable {
+      display: block; /* Keep table structure intact */
+      overflow-x: auto; /* Enable scrolling for wide tables */
+      white-space: nowrap; /* Prevent wrapping */
+    }
+  
+    .ordersTable th,
+    .ordersTable td {
+      white-space: nowrap; /* Ensure single-line content */
+    }
+  }

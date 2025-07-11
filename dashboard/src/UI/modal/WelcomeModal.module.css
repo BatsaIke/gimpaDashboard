@@ -1,0 +1,37 @@
+/* Base styles */
+p {
+  font-size: 20px !important;
+  padding: 20px 10px;
+}
+
+button {
+  width: 50%;
+  justify-content: center;
+  margin: 0 auto;
+  font-size: 18px !important;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  p {
+    font-size: 18px !important;
+    padding: 15px 8px;
+  }
+
+  button {
+    width: 80%;
+    font-size: 16px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  p {
+    font-size: 16px !important;
+    padding: 10px 5px;
+  }
+
+  button {
+    width: 100%;
+    font-size: 14px !important;
+  }
+}

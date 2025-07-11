@@ -1,0 +1,120 @@
+/* src/Products.module.css */
+.productsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px;
+}
+
+.productCard {
+  position: relative;
+  width: calc(25% - 16px);
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+  background: #fff;
+  text-align: center;
+}
+
+.productCard:hover {
+  transform: translateY(-5px);
+}
+
+.productImage {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.productInfo {
+  margin-top: 16px;
+}
+
+.productName {
+  font-size: 18px;
+  margin: 10px 0;
+  color: #000;
+}
+
+.priceContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.oldPrice {
+  text-decoration: line-through;
+  color: #888;
+  margin-right: 8px;
+}
+
+.productPrice {
+  font-size: 16px;
+  color: #2a9d8f;
+}
+
+.productRating {
+  font-size: 14px;
+  margin: 10px 0;
+}
+
+.productRating .fa-star, .productRating .fa-star-o {
+  color: #ddd; /* default color for empty stars */
+  cursor: pointer;
+}
+
+.productRating .fa-star.selected {
+  color: #FFD700; /* yellowish color for selected stars */
+}
+
+.addToCartButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #2a9d8f;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 16px;
+  width: 100%;
+}
+
+.addToCartButton i {
+  margin-right: 8px;
+}
+
+.addToCartButton:hover {
+  background-color: #21867a;
+}
+
+.outOfStock {
+  display: none;
+  color: red;
+  font-weight: bold;
+  margin-top: 16px;
+}
+
+.productCard.outOfStockCard:hover .addToCartButton {
+  display: none;
+}
+
+.productCard.outOfStockCard:hover .outOfStock {
+  display: block;
+}
+
+.discount {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: #2a9d8f;
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 14px;
+}

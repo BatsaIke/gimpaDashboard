@@ -1,0 +1,23 @@
+/* src/components/KpiColumn/KpiColumn.module.css */
+
+.column {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 15px;
+  border-radius: 8px;
+  min-width: 250px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.columnTitle {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  color: #fff;
+}
+
+.kpiList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}

@@ -1,0 +1,6 @@
+.completionCard {
+  background:#fff; box-shadow:0 4px 12px rgba(0,0,0,0.08); padding:1.5rem; border-left:4px solid #2CA85C; margin-top:1.5rem; transition:box-shadow .3s ease;
+}
+.completionCard:hover { box-shadow:0 6px 16px rgba(0,0,0,0.12); }
+@media (max-width:768px){ .completionCard{padding:1.25rem;} }
+@media (max-width:480px){ .completionCard{padding:1rem; margin-top:1rem;} }

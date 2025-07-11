@@ -1,0 +1,48 @@
+/* src/components/EmployeeActions.module.css */
+.actionsContainer {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+  }
+  
+  .editButton,
+  .deleteButton,
+  .resetButton {
+    border: none;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .editButton {
+    background: #ffc107;
+    color: #002f5f;
+  }
+  
+  .editButton:hover {
+    background: #e0a800;
+  }
+  
+  .deleteButton {
+    background: #dc3545;
+    color: white;
+  }
+  
+  .deleteButton:hover {
+    background: #c82333;
+  }
+  
+  .resetButton {
+    background: #17a2b8;
+    color: white;
+  }
+  
+  .resetButton:hover {
+    background: #138496;
+  }
+  

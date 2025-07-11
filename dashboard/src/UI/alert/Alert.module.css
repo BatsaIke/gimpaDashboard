@@ -1,0 +1,84 @@
+.alertWrapper {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  z-index: 10000000 !important;
+  width: 350px;
+  max-width: 90vw;
+}
+
+.alert {
+  position: relative;
+  padding: 1.25rem 1.5rem;
+  border-radius: 12px;
+  color: white;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(10px);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.alertContent {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.progressBar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.3);
+  width: 100%;
+  transform-origin: left;
+  animation: progress 5s linear forwards;
+}
+
+/* Alert type variations */
+.alertprimary {
+  background: rgba(0, 123, 255, 0.9);
+}
+
+.alertlight {
+  background: rgba(248, 249, 250, 0.95);
+  color: #212529;
+}
+
+.alertdark {
+  background: rgba(33, 37, 41, 0.95);
+}
+
+.alertdanger {
+  background: rgba(220, 53, 69, 0.9);
+}
+
+.alertsuccess {
+  background: rgba(40, 167, 69, 0.9);
+}
+
+/* Animations */
+@keyframes progress {
+  from { transform: scaleX(1); }
+  to { transform: scaleX(0); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .alertWrapper {
+    width: 90%;
+    left: 50%;
+    transform: translateX(-50%);
+    right: auto;
+  }
+  
+  .alert {
+    padding: 1rem;
+  }
+}

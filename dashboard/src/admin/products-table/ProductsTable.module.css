@@ -1,0 +1,86 @@
+/*************************
+  RESPONSIVE TABLE
+***************************/
+
+/* General Styles */
+.productsTable {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Table Header */
+.productsTable thead th {
+  background-color: #f3f3f3;
+  color: #333;
+  text-align: left;
+  padding: 14px;
+  font-size: 0.95rem;
+  font-weight: bold;
+  border-bottom: 2px solid #ddd;
+}
+
+/* Table Rows */
+.productsTable tbody tr {
+  border-bottom: 1px solid #eee;
+}
+
+.productsTable tbody tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+/* Table Cells */
+.productsTable td {
+  padding: 12px;
+  font-size: 0.9rem;
+  color: #333;
+  vertical-align: middle;
+}
+
+/* Mobile-Specific Adjustments */
+@media (max-width: 768px) {
+  .productsTable {
+    overflow-x: scroll; /* Enable smooth scrolling for smaller screens */
+    -webkit-overflow-scrolling: touch; /* Improve scrolling on mobile devices */
+  }
+
+  .productsTable thead th {
+    font-size: 0.85rem; /* Adjust font size for mobile */
+    padding: 8px; /* Adjust padding for better fit */
+  }
+
+  .productsTable td {
+    font-size: 0.85rem; /* Reduce cell font size slightly */
+    padding: 6px; /* Adjust padding */
+  }
+}
+
+/* Extra Small Screens (e.g., very small mobile devices) */
+@media (max-width: 576px) {
+  .productsTable td {
+    font-size: 0.75rem; /* Further reduce text size for very small screens */
+    padding: 5px; /* Optimize padding */
+  }
+
+  .productsTable thead th {
+    font-size: 0.75rem; /* Further reduce header font size */
+    padding: 5px;
+  }
+}
+
+/* Interactive Delete Button */
+.deleteBtn {
+  background: none;
+  border: none;
+  color: #ff4d4f;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 6px;
+  transition: background-color 0.2s ease;
+  border-radius: 4px;
+}
+
+.deleteBtn:hover {
+  background-color: rgba(255, 77, 79, 0.1);
+}

@@ -1,0 +1,138 @@
+.mainFields h2 {
+    margin: 0;
+    font-size: 1.4rem;
+    color: #fff;
+    background: linear-gradient(45deg, #002f5f, #2ca85c);
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+  }
+  
+  .description {
+    font-size: 1rem;
+    color: #333;
+  }
+  
+  /* Meta Info (departments, assigned, etc.) */
+  .metaInfo p {
+    margin: 0.2rem 0;
+    font-size: 0.95rem;
+    color: #444;
+  }
+  
+  .metaInfo strong {
+    color: #222;
+  }
+  
+  /* Status Dropdown */
+  .statusDropdown {
+    margin-left: 0.5rem;
+    padding: 0.2rem 0.4rem;
+    font-size: 0.9rem;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+  }
+  
+  .statusDropdown:focus {
+    outline: none;
+    border-color: #2ca85c;
+  }
+  
+  .checkboxItem {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.4rem;
+  }
+  /* KpiDetailModal.module.css */
+
+.container {
+  padding: 1rem;
+  border: 1px solid #e1e1e1;
+  border-radius: 4px;
+  background: white;
+}
+
+.header {
+  margin-bottom: 1.5rem;
+}
+
+.header h2 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #222;
+}
+
+.header p {
+  margin: 0;
+  color: #555;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+}
+
+.field label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #666;
+  margin-bottom: 0.25rem;
+}
+
+.field span {
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.select {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  font-size: 0.9rem;
+  width: 100%;
+  max-width: 200px;
+}
+
+.select:focus {
+  outline: none;
+  border-color: #0066cc;
+}
+
+.status {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 3px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.status.Pending {
+  background: #ffeeba;
+  color: #856404;
+}
+
+.status.In\ Progress {
+  background: #bee5eb;
+  color: #0c5460;
+}
+
+.status.Completed {
+  background: #c3e6cb;
+  color: #155724;
+}
+
+.status.Approved {
+  background: #d4edda;
+  color: #155724;
+}

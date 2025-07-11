@@ -1,0 +1,70 @@
+.deliverablesContainer {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  margin-bottom: 2rem;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #2c3e50;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.sectionTitle::before {
+  content: "";
+  display: block;
+  width: 4px;
+  height: 1.25rem;
+  background: #2ca85c;
+  border-radius: 2px;
+}
+
+.countBadge {
+  background: #f0f0f0;
+  color: #666;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+}
+
+.deliverablesList {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.emptyState {
+  color: #666;
+  text-align: center;
+  padding: 2rem;
+  background: #fafafa;
+  border-radius: 6px;
+  font-size: 0.95rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .deliverablesContainer {
+    padding: 1rem;
+  }
+  
+  .sectionTitle {
+    font-size: 1.1rem;
+  }
+}

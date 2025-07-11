@@ -1,0 +1,57 @@
+.chartContainer {
+  width: 100%;
+  margin: 1rem 0;
+}
+
+.barGroup {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.barLabel {
+  width: 80px;
+  font-weight: 500;
+  color: #002F5F;
+}
+
+.barBackground {
+  flex: 1;
+  height: 30px;
+  background: #F1F5F9;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+.bar {
+  height: 100%;
+  position: relative;
+  transition: width 0.5s ease;
+}
+
+.assigneeBar {
+  background: #EF4444;
+}
+
+.creatorBar {
+  background: #10B981;
+}
+
+.barValue {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: white;
+  font-weight: 600;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+.scale {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.5rem;
+  color: #64748B;
+  font-size: 0.8rem;
+}

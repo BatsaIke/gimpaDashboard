@@ -1,0 +1,76 @@
+/* src/components/EmployeeTable/EmployeeTable.module.css */
+.container {
+  padding: 1rem;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.cardGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.emptyState img {
+  width: 200px;
+  height: auto;
+  margin-bottom: 1.5rem;
+  opacity: 0.7;
+}
+
+.emptyState h3 {
+  color: #002f5f;
+  margin-bottom: 0.5rem;
+}
+
+.emptyState p {
+  color: #64748b;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .cardGrid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  }
+  
+  .emptyState {
+    padding: 2rem;
+  }
+  
+  .emptyState img {
+    width: 150px;
+  }
+}
+
+@media (max-width: 480px) {
+  .cardGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .emptyState {
+    padding: 1.5rem;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

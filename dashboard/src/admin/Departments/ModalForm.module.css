@@ -1,0 +1,79 @@
+/* Modern Modal Form Styling - GIMPA Colors */
+.modalForm {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+  
+  /* Labels */
+  .modalForm label {
+    font-weight: 600;
+    color: #002f5f;
+    font-size: 1rem;
+  }
+  
+  /* Inputs */
+  .modalForm input {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #004aad;
+    border-radius: 6px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s ease-in-out;
+  }
+  
+  .modalForm input:focus {
+    border-color: #2ca85c;
+  }
+  
+  /* Buttons */
+  .cancelButton {
+    background: linear-gradient(135deg, #bbbbbb, #999999);
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.3s ease-in-out;
+  }
+  
+  .cancelButton:hover {
+    background: linear-gradient(135deg, #999999, #777777);
+  }
+  
+  .saveButton {
+    background: linear-gradient(135deg, #2ca85c, #1f8f50);
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.3s ease-in-out;
+  }
+  
+  .saveButton:hover {
+    background: linear-gradient(135deg, #1f8f50, #166f3b);
+  }
+  
+  .textarea {
+    width: 100%;
+    min-height: 80px;
+    resize: vertical;
+    padding: 10px;
+    border: 2px solid #004aad;
+    border-radius: 6px;
+    font-size: 1rem;
+  }
+  
+  .select {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #004aad;
+    border-radius: 6px;
+    font-size: 1rem;
+  }
+  

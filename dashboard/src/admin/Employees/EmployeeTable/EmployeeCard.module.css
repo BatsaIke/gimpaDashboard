@@ -1,0 +1,148 @@
+/* src/components/EmployeeTable/EmployeeCard.module.css */
+.card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  }
+  
+  .cardHeader {
+    padding: 1.5rem;
+    background: linear-gradient(135deg, #002F5F 0%, #2CA85C 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    font-weight: bold;
+  }
+  
+  .titleContainer {
+    flex: 1;
+    min-width: 0;
+  }
+  
+  .titleContainer h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .roleBadge {
+    display: inline-block;
+    margin-top: 0.25rem;
+    padding: 0.25rem 0.75rem;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .cardBody {
+    padding: 1.5rem;
+    flex: 1;
+  }
+  
+  .infoRow {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    color: #555;
+    font-size: 0.9rem;
+  }
+  
+  .infoRow:last-child {
+    margin-bottom: 0;
+  }
+  
+  .icon {
+    width: 20px;
+    color: #2CA85C;
+    flex-shrink: 0;
+  }
+  
+  .cardFooter {
+    padding: 1rem;
+    display: flex;
+    gap: 0.75rem;
+    background: #F8FAFC;
+    border-top: 1px solid #EDF2F7;
+  }
+  
+  .actionButton {
+    flex: 1;
+    padding: 0.5rem;
+    background: #2CA85C;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .actionButton:hover {
+    background: #23994C;
+  }
+  
+  .actionButtonDanger {
+    composes: actionButton;
+    background: #EF4444;
+  }
+  
+  .actionButtonDanger:hover {
+    background: #DC2626;
+  }
+  
+  .actionButtonSecondary {
+    composes: actionButton;
+    background: #3B82F6;
+  }
+  
+  .actionButtonSecondary:hover {
+    background: #2563EB;
+  }
+  
+  @media (max-width: 480px) {
+    .cardFooter {
+      flex-direction: column;
+    }
+    
+    .cardHeader {
+      padding: 1rem;
+    }
+    
+    .cardBody {
+      padding: 1rem;
+    }
+  }

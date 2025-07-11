@@ -1,0 +1,223 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(5px);
+  z-index: 1000;
+}
+
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  border-radius: 16px;
+  width: 95%;
+  max-width: 800px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #002F5F 0%, #2CA85C 100%);
+  color: white;
+}
+
+.titleGroup {
+  flex: 1;
+}
+
+.header h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.subtitle {
+  margin: 0.25rem 0 0;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.closeBtn {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.closeBtn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: rotate(90deg);
+}
+
+.content {
+  padding: 1.5rem;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.sectionTitle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #002F5F;
+  margin: 0 0 1rem;
+  font-size: 1.1rem;
+}
+
+.sectionTitle svg {
+  opacity: 0.7;
+}
+
+.scoreSection,
+.meetingSection,
+.historySection {
+  margin-bottom: 2rem;
+}
+
+.reasonBox {
+  background: #F8FAFC;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.reasonBox h5 {
+  margin: 0 0 0.5rem;
+  color: #002F5F;
+  font-size: 0.95rem;
+}
+
+.reasonBox p {
+  margin: 0;
+  color: #4B5563;
+  line-height: 1.5;
+}
+
+.meetingInfo {
+  background: #F8FAFC;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.infoRow {
+  display: flex;
+  margin-bottom: 0.75rem;
+}
+
+.infoRow:last-child {
+  margin-bottom: 0;
+}
+
+.infoRow > span:first-child {
+  font-weight: 500;
+  color: #002F5F;
+  min-width: 100px;
+}
+
+.infoRow > span:last-child,
+.infoRow > p {
+  flex: 1;
+  color: #4B5563;
+}
+
+.noMeeting {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: #F8FAFC;
+  border-radius: 8px;
+  gap: 1rem;
+}
+
+.noMeeting p {
+  margin: 0;
+  color: #4B5563;
+}
+
+.bookButton {
+  background: #3B82F6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.bookButton:hover {
+  background: #2563EB;
+}
+
+.footer {
+  padding: 1rem 1.5rem;
+  background: #F8FAFC;
+  border-top: 1px solid #E2E8F0;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.resolveButton {
+  background: #10B981;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.resolveButton:hover {
+  background: #0D9F6E;
+}
+
+@media (max-width: 768px) {
+  .modal {
+    width: 98%;
+  }
+  
+  .header {
+    padding: 1rem;
+  }
+  
+  .content {
+    padding: 1rem;
+  }
+  
+  .infoRow {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  
+  .infoRow > span:first-child {
+    min-width: auto;
+  }
+}

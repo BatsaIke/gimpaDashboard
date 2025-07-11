@@ -1,0 +1,68 @@
+.statsContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.statCard {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: transform 0.2s ease;
+}
+
+.statCard:hover {
+  transform: translateY(-5px);
+}
+
+.statIcon {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+}
+
+.statIcon.total {
+  background: rgba(239, 68, 68, 0.1);
+  color: #EF4444;
+}
+
+.statIcon.resolved {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10B981;
+}
+
+.statIcon.pending {
+  background: rgba(249, 115, 22, 0.1);
+  color: #F97316;
+}
+
+.statContent {
+  display: flex;
+  flex-direction: column;
+}
+
+.statValue {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1E293B;
+}
+
+.statLabel {
+  font-size: 0.9rem;
+  color: #64748B;
+}
+
+@media (max-width: 768px) {
+  .statsContainer {
+    grid-template-columns: 1fr;
+  }
+}

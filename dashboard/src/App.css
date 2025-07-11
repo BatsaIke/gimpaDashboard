@@ -1,0 +1,67 @@
+/* globalStyles.css */
+/* Basic Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Body styling */
+body {
+  font-family: 'Arial', sans-serif; /* Change to your preferred font */
+  background-color: #f5f5f5; /* Light grey background */
+  color: #333; /* Dark grey text color */
+}
+
+/* Global Container Styles */
+.container {
+  max-width: 1650px; /* Max width for large screens */
+  margin: 0 auto; /* Center containers */
+  padding: 20px; /* Padding inside containers */
+}
+
+/* Responsive Design */
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+  .container {
+    width: 100%;
+      padding: 10px;
+  }
+}
+@media only screen and (max-width: 480px) {
+  .container {
+    width: 100%;
+      padding: 10px;
+  }
+}
+
+/* Small devices (portrait tablets and large phones, 600px to 768px) */
+@media only screen and (min-width: 601px) and (max-width: 768px) {
+  .container {
+    width: 100%;
+      padding: 15px;
+  }
+}
+
+/* Medium devices (landscape tablets, 768px to 992px) */
+@media only screen and (min-width: 769px) and (max-width: 992px) {
+  .container {
+    width: 100%;
+    padding: 20px;
+  }
+}
+
+/* Large devices (laptops/desktops, 992px to 1200px) */
+@media only screen and (min-width: 993px) and (max-width: 1200px) {
+  .container {
+      padding: 25px;
+  }
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1201px) {
+  .container {
+      padding: 30px;
+  }
+}

@@ -1,0 +1,20 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.25rem;
+  }
+  .title {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #002F5F;
+  }
+  .required {
+    background: #EF4444;
+    color: #fff;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 0.25rem 0.75rem;
+  }

@@ -1,0 +1,148 @@
+.tableContainer {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.table th {
+  background: rgba(0, 47, 95, 0.7);
+  color: white;
+  padding: 1rem;
+  text-align: left;
+  font-weight: 500;
+}
+
+.table td {
+  padding: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+.table tr:hover td {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.scoresCell {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.assigneeScore {
+  color: #EF4444;
+  font-weight: 600;
+}
+
+.creatorScore {
+  color: #10B981;
+  font-weight: 600;
+}
+
+.vs {
+  opacity: 0.7;
+}
+
+.statusBadge {
+  display: inline-block;
+  padding: 0.35rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.statusBadge.active {
+  background: rgba(239, 68, 68, 0.2);
+  color: #EF4444;
+}
+
+.statusBadge.resolved {
+  background: rgba(16, 185, 129, 0.2);
+  color: #10B981;
+}
+
+.meetingBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.75rem;
+  background: rgba(59, 130, 246, 0.2);
+  color: #3B82F6;
+  border-radius: 20px;
+  font-size: 0.85rem;
+}
+
+.noMeeting {
+  opacity: 0.7;
+  font-size: 0.85rem;
+}
+
+.actionsCell {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.actionBtn {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.actionBtn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.actionBtnSecondary {
+  composes: actionBtn;
+  color: #3B82F6;
+}
+
+.actionBtnSecondary:hover {
+  background: rgba(59, 130, 246, 0.2);
+}
+
+.actionBtnSuccess {
+  composes: actionBtn;
+  color: #10B981;
+}
+
+.actionBtnSuccess:hover {
+  background: rgba(16, 185, 129, 0.2);
+}
+
+@media (max-width: 768px) {
+  .table th, .table td {
+    padding: 0.75rem;
+    font-size: 0.9rem;
+  }
+  
+  .actionsCell {
+    gap: 0.25rem;
+  }
+  
+  .actionBtn {
+    width: 32px;
+    height: 32px;
+    font-size: 0.9rem;
+  }
+}

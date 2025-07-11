@@ -1,0 +1,362 @@
+/* Modern CSS Variables */
+:root {
+  --gimpa-navy: #002664;
+  --gimpa-green: #16CB7F;
+  --gimpa-green-light: rgba(22, 203, 127, 0.1);
+  --gimpa-bg: #F8FAFC;
+  --gimpa-text: #1E293B;
+  --gimpa-text-light: #64748B;
+  --gimpa-border: #E2E8F0;
+  --gimpa-error: #EF4444;
+  --gimpa-white: #FFFFFF;
+  --gimpa-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --gimpa-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Base Styles */
+.signupContainer {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--gimpa-bg);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Left Section - Branding */
+.leftSection {
+  flex: 1;
+  background: linear-gradient(135deg, var(--gimpa-navy) 0%, #001a4d 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.leftSection::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(22, 203, 127, 0.1) 0%, transparent 70%);
+  animation: float 15s infinite alternate ease-in-out;
+}
+
+@keyframes float {
+  0% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(30px, 30px);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+.logoContainer {
+  text-align: center;
+  padding: 2rem;
+  z-index: 1;
+}
+
+.logo {
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: var(--gimpa-green);
+  margin-bottom: 1rem;
+  letter-spacing: -1px;
+}
+
+.tagline {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1.25rem;
+  max-width: 400px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* Right Section - Form */
+.rightSection {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  background-color: var(--gimpa-white);
+}
+
+.spinnerContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.signupForm {
+  width: 100%;
+  max-width: 420px;
+  padding: 2.5rem;
+  border-radius: 12px;
+  background-color: var(--gimpa-white);
+  box-shadow: var(--gimpa-shadow);
+}
+
+.formTitle {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--gimpa-text);
+  margin-bottom: 0.5rem;
+}
+
+.formSubtitle {
+  color: var(--gimpa-text-light);
+  margin-bottom: 2rem;
+  font-size: 0.95rem;
+}
+
+.inputGroup {
+  margin-bottom: 1.5rem;
+}
+
+.inputGroup label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--gimpa-text);
+}
+
+.inputWrapper {
+  position: relative;
+}
+
+.inputField {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  font-size: 0.95rem;
+  border: 1px solid var(--gimpa-border);
+  border-radius: 8px;
+  background-color: var(--gimpa-bg);
+  transition: var(--gimpa-transition);
+}
+
+.inputField:focus {
+  outline: none;
+  border-color: var(--gimpa-green);
+  box-shadow: 0 0 0 3px var(--gimpa-green-light);
+}
+
+.inputWrapper.error .inputField {
+  border-color: var(--gimpa-error);
+}
+
+.errorText {
+  display: flex;
+  align-items: center;
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--gimpa-error);
+}
+
+.errorIcon {
+  margin-right: 0.25rem;
+  font-size: 0.875rem;
+}
+
+/* Password Strength Meter */
+.passwordStrength {
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.strengthBar {
+  height: 4px;
+  flex-grow: 1;
+  border-radius: 2px;
+  background-color: var(--gimpa-border);
+  overflow: hidden;
+  position: relative;
+}
+
+.strengthBar::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 0;
+  transition: var(--gimpa-transition);
+}
+
+.strengthBar.weak::after {
+  width: 33%;
+  background-color: var(--gimpa-error);
+}
+
+.strengthBar.medium::after {
+  width: 66%;
+  background-color: #F59E0B;
+}
+
+.strengthBar.strong::after {
+  width: 100%;
+  background-color: var(--gimpa-green);
+}
+
+.strengthText {
+  margin-left: 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.strengthBar.weak ~ .strengthText {
+  color: var(--gimpa-error);
+}
+
+.strengthBar.medium ~ .strengthText {
+  color: #F59E0B;
+}
+
+.strengthBar.strong ~ .strengthText {
+  color: var(--gimpa-green);
+}
+
+/* Buttons */
+.signupButton {
+  width: 100%;
+  padding: 1rem;
+  margin-top: 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--gimpa-white);
+  background-color: var(--gimpa-green);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: var(--gimpa-transition);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.signupButton:hover {
+  background-color: #13b16e;
+}
+
+.buttonIcon {
+  margin-left: 0.5rem;
+  transition: var(--gimpa-transition);
+}
+
+.signupButton:hover .buttonIcon {
+  transform: translateX(3px);
+}
+
+.loginPrompt {
+  text-align: center;
+  margin-top: 1.5rem;
+  color: var(--gimpa-text-light);
+  font-size: 0.875rem;
+}
+
+.loginLink {
+  color: var(--gimpa-green);
+  font-weight: 500;
+  text-decoration: none;
+  transition: var(--gimpa-transition);
+}
+
+.loginLink:hover {
+  text-decoration: underline;
+}
+
+/* Divider */
+.divider {
+  display: flex;
+  align-items: center;
+  margin: 1.5rem 0;
+}
+
+.dividerLine {
+  flex: 1;
+  height: 1px;
+  background-color: var(--gimpa-border);
+}
+
+.dividerText {
+  padding: 0 1rem;
+  color: var(--gimpa-text-light);
+  font-size: 0.75rem;
+}
+
+/* Google Button */
+.googleButton {
+  width: 100%;
+  padding: 0.875rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--gimpa-text);
+  background-color: var(--gimpa-white);
+  border: 1px solid var(--gimpa-border);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: var(--gimpa-transition);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.googleButton:hover {
+  background-color: #F8FAFC;
+  border-color: #CBD5E1;
+}
+
+.googleIcon {
+  margin-right: 0.75rem;
+  color: #DB4437;
+  font-size: 1.1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .signupForm {
+    padding: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .signupContainer {
+    flex-direction: column;
+  }
+
+  .leftSection {
+    padding: 2rem;
+    min-height: 200px;
+  }
+
+  .logo {
+    font-size: 2.5rem;
+  }
+
+  .tagline {
+    font-size: 1rem;
+  }
+
+  .rightSection {
+    padding: 2rem 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .signupForm {
+    padding: 1.5rem;
+    box-shadow: none;
+  }
+
+  .formTitle {
+    font-size: 1.75rem;
+  }
+}

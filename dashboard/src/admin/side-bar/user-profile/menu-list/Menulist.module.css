@@ -1,0 +1,121 @@
+.menuList {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 20px;
+  max-height: 80vh !important;
+  overflow-y: auto !important;
+}
+
+
+.composeButton {
+  margin-bottom: 20px;
+  padding: 10px 20px;
+  background-color: #4CAF50; /* Green background */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+
+.specialComposeButton{
+  background-color:rgba(0,82,155,255); 
+  margin-bottom: 20px;
+  padding: 10px 20px;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+
+.composeButton:hover {
+  background-color: rgba(75,192,192,1); /* Change to darker green on hover */
+}
+
+.menuItem {
+  width: 100%;
+  padding: 10px 0;
+  text-align: center;
+  cursor: pointer;
+}
+.specialMenuItem {
+  width: 100%;
+  padding: 10px 0;
+  text-align: center;
+  cursor: pointer;
+}
+
+.menuItem:hover {
+  background-color: rgba(75,192,192,1);
+  color: #fff;
+}
+.specialMenuItem:hover{
+  background-color: rgba(0,82,155,255); 
+color: #fff;
+
+}
+
+.menuLink {
+  display: flex;
+  align-items: center;
+  color: inherit;
+  text-decoration: none;
+  padding: 10px 20px;
+}
+
+.menuLink:hover {
+  color: #fff;
+}
+.specialMenuLink:hover {
+  background-color: rgb(87, 75, 192); 
+}
+
+.menuIcon {
+  margin-right: 8px;
+  font-size: 1.2em;
+}
+
+/* Adjustments for responsiveness and scroll */
+@media (max-width: 768px) {
+  .menuList {
+    max-height: 70vh; /* Slightly smaller max-height */
+  }
+
+  .composeButton,
+  .menuLink {
+    padding: 8px 15px;
+    font-size: 14px;
+  }
+
+  .menuIcon {
+    font-size: 1em;
+  }
+}
+
+@media (max-width: 480px) {
+  .menuList {
+    max-height: 60vh; /* Even smaller max-height for mobile */
+  }
+
+  .composeButton,
+  .menuLink {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  /* Adjusting icon size and margin for mobile */
+  .menuIcon {
+    margin-right: 5px;
+    font-size: 0.9em;
+  }
+}
