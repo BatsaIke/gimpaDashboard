@@ -62,10 +62,11 @@ app.get(
 
 // ---------- Serve React client if present ----------
 /**
- * UPDATED: Using process.cwd() is more reliable on Vercel than __dirname
- * as it consistently points to the project's root directory at runtime.
+ * FINAL UPDATE: This path is now robust for both local dev and Vercel.
+ * It navigates up from the current file's directory to the project root,
+ * then down into the dashboard's build folder.
  */
-const clientBuildPath = path.join(process.cwd(), "dashboard/build");
+const clientBuildPath = path.resolve(__dirname, "..", "..", "dashboard", "build");
 const indexHtml = path.join(clientBuildPath, "index.html");
 
 if (fs.existsSync(indexHtml)) {
@@ -79,6 +80,10 @@ if (fs.existsSync(indexHtml)) {
   });
 } else {
   console.warn("⚠️ No frontend build found at:", clientBuildPath);
+  // Add a fallback for when the frontend isn't built
+  app.get("/", (req, res) => {
+      res.status(404).send("Frontend not found. Did you run the build script?");
+  });
 }
 
 
@@ -113,3 +118,4 @@ process.on("unhandledRejection", (reason, promise) => {
     process.exit(1);
   }
 });
+
