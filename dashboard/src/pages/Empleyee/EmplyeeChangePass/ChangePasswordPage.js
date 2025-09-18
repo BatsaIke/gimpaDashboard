@@ -1,6 +1,6 @@
 // src/pages/ChangePasswordPage.jsx
 import React, { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import styles from "./ChangePasswordPage.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLock } from "@fortawesome/free-solid-svg-icons";

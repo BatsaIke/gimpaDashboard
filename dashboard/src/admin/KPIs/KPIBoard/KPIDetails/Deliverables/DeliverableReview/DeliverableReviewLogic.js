@@ -10,6 +10,7 @@ const hasNumber = (v) => typeof v === "number" && !Number.isNaN(v);
 const pad = (n) => String(n).padStart(2, "0");
 const norm = (v) => (v == null ? "" : String(v));
 const EMPTY_ARR = Object.freeze([]);
+const EMPTY_OBJ = Object.freeze({});
 
 function inferPatternFromLabels(labels = []) {
   const sample = labels.find(Boolean) || "";
@@ -60,8 +61,12 @@ export const useDeliverableReview = ({
     }
   }, [dispatch, assigneeId, userKpi]);
 
+  // 🛠 FIX: Memoize userSpecificMap so its identity is stable
+  const userSpecificMap = useMemo(() => {
+    return userKpi?.userSpecific?.deliverables || EMPTY_OBJ;
+  }, [userKpi?.userSpecific?.deliverables]);
+
   // Extract the user-specific deliverables array with a stable reference
-  const userSpecificMap = userKpi?.userSpecific?.deliverables || {};
   const allUserDeliverables = useMemo(() => {
     const arr = userSpecificMap[norm(assigneeId)];
     return Array.isArray(arr) ? arr : EMPTY_ARR;

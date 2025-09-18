@@ -1,7 +1,7 @@
 import "./App.css";
 import { Route, Routes, Navigate, useLocation } from "react-router-dom";
 import Alert from "./UI/alert/Alert";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch} from "react-redux";
 import React, { useEffect } from "react";
 import SignupPage from "./pages/signup/SignupPage";
 import AdminLayout from "./admin/AdminLayout";
