@@ -39,7 +39,8 @@ const DepartmentSchema = new Schema<IDepartment, DepartmentModel>(
   },
   {
     timestamps: true,
-    toJSON: { virtuals: true, transform: (_d, r) => { delete r.__v; return r; } },
+    versionKey: false,                 // ⬅️ removes __v automatically
+    toJSON: { virtuals: true },        // no transform needed
     toObject: { virtuals: true },
   }
 );
