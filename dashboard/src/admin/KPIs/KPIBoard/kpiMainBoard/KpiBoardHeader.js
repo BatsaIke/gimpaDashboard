@@ -12,8 +12,7 @@ const HeaderSection = ({
   currentUserId,
   setSelectedHeaderId,
   setModalOpen,
-  onKpiClick, // ✅ pass down this callback
-  setIsDetailOpen,
+  onKpiClick,
   handleDragEnd,
   onEditHeader,
   onDeleteHeader,
@@ -24,55 +23,56 @@ const HeaderSection = ({
   const { isCreator } = useKpiUserRole(header);
 
   const handleKpiClick = (kpi) => {
-    if (onKpiClick) {
-      onKpiClick(kpi);
-    }
+    onKpiClick?.(kpi);
   };
 
   return (
-    <motion.div
+    <motion.section
       className={styles.headerSection}
       initial={{ y: 20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.3 }}
+      transition={{ duration: 0.4, ease: "easeOut" }}
     >
       {!isUserView && (
-        <div className={styles.headerTitleContainer}>
+        <div className={styles.headerTop}>
           <h2 className={styles.headerTitle}>{header.name}</h2>
+
           <div className={styles.headerActions}>
             {isCreator && (
               <>
                 <motion.button
-                  className={styles.editHeaderButton}
+                  className={`${styles.actionButton} ${styles.edit}`}
                   onClick={() => onEditHeader(header)}
-                  whileHover={{ scale: 1.05 }}
+                  whileHover={{ scale: 1.08 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <FiEdit2 size={16} />
-                  Edit
+                  <FiEdit2 size={18} />
+                  <span>Edit</span>
                 </motion.button>
+
                 <motion.button
-                  className={styles.deleteHeaderButton}
+                  className={`${styles.actionButton} ${styles.delete}`}
                   onClick={() => onDeleteHeader(header._id)}
-                  whileHover={{ scale: 1.05 }}
+                  whileHover={{ scale: 1.08 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <FiTrash2 size={16} />
-                  Delete
+                  <FiTrash2 size={18} />
+                  <span>Delete</span>
                 </motion.button>
               </>
             )}
+
             <motion.button
-              className={styles.createKpiButton}
+              className={`${styles.actionButton} ${styles.create}`}
               onClick={() => {
                 setSelectedHeaderId(header._id);
                 setModalOpen(true);
               }}
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.08 }}
               whileTap={{ scale: 0.95 }}
             >
-              <FiPlus size={16} />
-              Create KPI
+              <FiPlus size={18} />
+              <span>Create KPI</span>
             </motion.button>
           </div>
         </div>
@@ -83,29 +83,29 @@ const HeaderSection = ({
           header={header}
           kpis={header.kpis || []}
           currentUserId={currentUserId}
-          onKpiClick={handleKpiClick} // ✅ use this new handler
+          onKpiClick={handleKpiClick}
           onEditKpi={onEditKpi}
           onDeleteKpi={onDeleteKpi}
           isUserView={isUserView}
         />
       </DragDropContext>
-    </motion.div>
+    </motion.section>
   );
 };
 
 const KpiBoardHeader = ({ headers, headersLoading, ...props }) => {
   if (headersLoading) {
-    return <p className={styles.loadingText}>Loading...</p>;
+    return <p className={styles.loadingText}>Loading KPIs…</p>;
+  }
+
+  if (!headers || headers.length === 0) {
+    return <p className={styles.emptyText}>No KPI headers yet.</p>;
   }
 
   return (
     <>
       {headers.map((header) => (
-        <HeaderSection
-          key={header._id}
-          header={header}
-          {...props}
-        />
+        <HeaderSection key={header._id} header={header} {...props} />
       ))}
     </>
   );

@@ -1,7 +1,9 @@
-// src/components/EmployeeDetailModal/EmployeeDetailModal.jsx
+// ==========================
+// EmployeeDetailModal.jsx (unchanged except safe guards)
+// ==========================
 import React from "react";
 import ReactDOM from "react-dom";
-import styles from "./EmployeeDetailModal.module.css";
+import stylesDetail from "./EmployeeDetailModal.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes, faEdit, faTrash, faRedo } from "@fortawesome/free-solid-svg-icons";
 
@@ -15,67 +17,69 @@ const EmployeeDetailModal = ({
 }) => {
   if (!isOpen || !employee) return null;
 
+  const uname = employee.username || employee.email || "?";
+
   return ReactDOM.createPortal(
     <>
-      <div className={styles.overlay} onClick={onClose} />
-      <div className={styles.modal}>
-        <header className={styles.header}>
-          <div className={styles.avatar}>
-            {employee.username.charAt(0).toUpperCase()}
+      <div className={stylesDetail.overlay} onClick={onClose} />
+      <div className={stylesDetail.modal}>
+        <header className={stylesDetail.header}>
+          <div className={stylesDetail.avatar}>
+            {String(uname).charAt(0).toUpperCase()}
           </div>
-          <div className={styles.headerContent}>
-            <h3>{employee.username}</h3>
-            <p className={styles.role}>{employee.role}</p>
+          <div className={stylesDetail.headerContent}>
+            <h3>{uname}</h3>
+            <p className={stylesDetail.role}>{employee.role}</p>
           </div>
-          <button className={styles.closeBtn} onClick={onClose}>
+          <button className={stylesDetail.closeBtn} onClick={onClose}>
             <FontAwesomeIcon icon={faTimes} />
           </button>
         </header>
 
-        <section className={styles.contentGrid}>
-          <div className={styles.colLeft}>
-            <div className={styles.infoItem}>
-              <span className={styles.infoLabel}>Email:</span>
-              <span className={styles.infoValue}>{employee.email || 'N/A'}</span>
+        <section className={stylesDetail.contentGrid}>
+          <div className={stylesDetail.colLeft}>
+            <div className={stylesDetail.infoItem}>
+              <span className={stylesDetail.infoLabel}>Email:</span>
+              <span className={stylesDetail.infoValue}>{employee.email || 'N/A'}</span>
             </div>
-            <div className={styles.infoItem}>
-              <span className={styles.infoLabel}>Phone:</span>
-              <span className={styles.infoValue}>{employee.phone || 'N/A'}</span>
+            <div className={stylesDetail.infoItem}>
+              <span className={stylesDetail.infoLabel}>Phone:</span>
+              <span className={stylesDetail.infoValue}>{employee.phone || 'N/A'}</span>
             </div>
-            <div className={styles.infoItem}>
-              <span className={styles.infoLabel}>Department:</span>
-              <span className={styles.infoValue}>
+            <div className={stylesDetail.infoItem}>
+              <span className={stylesDetail.infoLabel}>Department:</span>
+              <span className={stylesDetail.infoValue}>
                 {employee.department?.name || 'None'}
               </span>
             </div>
           </div>
-          <div className={styles.colRight}>
-            <div className={styles.infoItem}>
-              <span className={styles.infoLabel}>Rank:</span>
-              <span className={styles.infoValue}>{employee.rank || 'N/A'}</span>
+          <div className={stylesDetail.colRight}>
+            <div className={stylesDetail.infoItem}>
+              <span className={stylesDetail.infoLabel}>Rank:</span>
+              <span className={stylesDetail.infoValue}>{employee.rank || 'N/A'}</span>
             </div>
-            <div className={styles.infoItem}>
-              <span className={styles.infoLabel}>Status:</span>
-              <span className={styles.statusActive}>Active</span>
+            <div className={stylesDetail.infoItem}>
+              <span className={stylesDetail.infoLabel}>Status:</span>
+              <span className={stylesDetail.statusActive}>Active</span>
             </div>
           </div>
         </section>
 
-        <footer className={styles.footer}>
+        <footer className={stylesDetail.footer}>
           <button 
-            className={styles.actionBtn} 
+            className={stylesDetail.actionBtn} 
             onClick={() => onEdit(employee)}
           >
             <FontAwesomeIcon icon={faEdit} /> Edit
           </button>
           <button 
-            className={styles.actionBtnDanger} 
+            className={stylesDetail.actionBtnDanger} 
             onClick={() => onDelete(employee._id)}
           >
             <FontAwesomeIcon icon={faTrash} /> Delete
           </button>
           <button 
-            className={styles.actionBtnSecondary}
+            className={stylesDetail.actionBtnSecondary}
             onClick={() => onResetPassword(employee._id)}
           >
             <FontAwesomeIcon icon={faRedo} /> Reset Password

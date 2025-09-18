@@ -5,14 +5,14 @@ import multer, { StorageEngine } from "multer";
 import fs from "fs";
 import path from "path";
 import {
-  changeKpiStatus,
   createKpi,
   deleteKpi,
   getAllKpis,
-  getUserKpis,
-  updateKpi,
   uploadEvidence,
-} from "../controllers/kpiController";
+} from "../controllers/kpiController/kpiController";
+import { updateKpi } from "../controllers/kpiController/updateKpi/updateKpi";
+import { changeKpiStatus } from "../controllers/kpiController/getUserStatus/getUserKpiStatus";
+import { getUserKpis } from "../controllers/kpiController/fetchUserKpi/fetchUserKpi";
 
 const router = express.Router();
 
@@ -40,7 +40,7 @@ const upload = multer({ storage });
 // ✅ KPI Routes
 router.get("/", verifyToken, getAllKpis);
 router.post("/", verifyToken, upload.any(),createKpi );
-router.patch("/:id", verifyToken, updateKpi);
+router.patch("/:id", verifyToken, upload.any(), updateKpi);
 router.delete("/:id", verifyToken, deleteKpi);
 // Add this to your kpiRoutes.ts
 router.get('/user/:userId', verifyToken, getUserKpis);

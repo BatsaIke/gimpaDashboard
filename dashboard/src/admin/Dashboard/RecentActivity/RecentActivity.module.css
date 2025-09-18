@@ -1,0 +1,22 @@
+.recentActivity { }
+
+.title {
+  font-size: 1.2rem; margin-bottom: 1.5rem; font-weight: 600;
+}
+
+.activityList { display: flex; flex-direction: column; gap: 1rem; }
+
+.activityItem {
+  display: flex; align-items: flex-start; gap: 1rem;
+  padding: 0.8rem; border-radius: 12px; transition: all 0.3s ease;
+}
+.activityItem:hover { background: rgba(255, 255, 255, 0.05); }
+
+.activityIcon {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+
+.activityText { margin-bottom: 0.3rem; font-size: 0.9rem; }
+.activityTime { font-size: 0.8rem; opacity: 0.7; }

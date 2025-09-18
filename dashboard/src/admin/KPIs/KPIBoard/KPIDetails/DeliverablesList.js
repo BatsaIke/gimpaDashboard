@@ -10,10 +10,9 @@ const DeliverablesList = ({
   isKpiCreator,
   isAssignedUser,
   onDeliverableStatusChange,
-  onAttachChange,
   onScoreChange,
   isUserView,
-  onBookMeeting,           // ← new prop
+  reviewTargetUserId          // ← new prop
 }) => {
   return (
     <div className={styles.deliverablesContainer}>
@@ -39,10 +38,9 @@ const DeliverablesList = ({
                 isAssignedUser={isAssignedUser}
                 ALL_STATUSES={ALL_STATUSES}
                 onDeliverableStatusChange={onDeliverableStatusChange}
-                onAttachChange={onAttachChange}
                 onScoreChange={onScoreChange}
                 isUserView={isUserView}
-                onBookMeeting={onBookMeeting}   // ← forward it here
+                reviewTargetUserId={reviewTargetUserId}  
               />
             );
           })}

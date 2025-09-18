@@ -1,0 +1,59 @@
+/* Container wrapper — centered and responsive */
+.wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 360px;
+  margin: 0 auto;                                 /* 👈 Centers it */
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.wrapper:hover,
+.wrapper:focus-within {
+  border-color: #2ca85c;
+  box-shadow: 0 0 0 2px rgba(44, 168, 92, 0.15);
+}
+
+.icon {
+  font-size: 1rem;
+  color: #2ca85c;
+  margin-right: 0.5rem;
+  flex-shrink: 0;
+}
+
+.input {
+  flex: 1;
+  font-size: 0.95rem;
+  font-weight: 500;
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  outline: none;
+  padding: 0.25rem 0;
+   text-align: center;
+}
+
+.input::placeholder {
+  color: #9ca3af;
+  font-weight: 400;
+}
+
+/* Responsive tweaks */
+@media (max-width: 600px) {
+  .wrapper {
+    max-width: 90%;
+    padding: 0.5rem 0.6rem;
+  }
+
+  .input {
+    font-size: 0.875rem;
+  }
+}

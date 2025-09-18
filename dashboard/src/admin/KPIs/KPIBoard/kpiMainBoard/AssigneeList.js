@@ -1,7 +1,8 @@
 // src/components/KPIBoard/KpiBoard/AssigneeList.js
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import styles from './KpiMetaInfoPanel.module.css';
+import styles from '../kpiMainBoard/KpiRightSide/KpiMetaInfoPanel.module.css';
+
 
 const AssigneeList = ({ assignees, isCreatorView }) => {
   const [showAll, setShowAll] = useState(false);

@@ -34,12 +34,8 @@ const UserKpiBoard = () => {
     const handleSidebarToggle = (event) => {
       setIsSidebarCollapsed(event.detail.isCollapsed);
     };
-
     window.addEventListener("sidebarToggle", handleSidebarToggle);
-
-    return () => {
-      window.removeEventListener("sidebarToggle", handleSidebarToggle);
-    };
+    return () => window.removeEventListener("sidebarToggle", handleSidebarToggle);
   }, []);
 
   useEffect(() => {
@@ -56,23 +52,28 @@ const UserKpiBoard = () => {
         setLoading(false);
       }
     };
-
     if (userId) fetchData();
   }, [dispatch, userId]);
 
-  const handleDragEnd = (result) => {
-    if (!result.destination || result.destination.droppableId !== "Completed")
-      return;
+  const handleDragEnd = async (result) => {
+    const dest = result?.destination;
+    if (!dest) return;
 
+    const newStatus = dest.droppableId;
     const kpiToUpdate = kpis.find((k) => k._id === result.draggableId);
-    if (kpiToUpdate) {
-      dispatch(
+    if (!kpiToUpdate) return;
+
+    try {
+      await dispatch(
         updateKpiStatusOnly(kpiToUpdate._id, {
-          status: result.destination.droppableId,
-          assigneeId: userId,
-          promoteGlobally: true,
+          status: newStatus,
+          assigneeId: userId,        // scope to the viewed user
+          promoteGlobally: false,    // do NOT overwrite global on user boards
         })
       );
+      dispatch(fetchUserKpis(userId));
+    } catch (e) {
+      // handled by action
     }
   };
 
@@ -96,9 +97,7 @@ const UserKpiBoard = () => {
       transition={{ duration: 0.3 }}
       style={{
         marginLeft: isSidebarCollapsed ? "70px" : "200px",
-        width: isSidebarCollapsed
-          ? "calc(100vw - 70px)"
-          : "calc(100vw - 200px)",
+        width: isSidebarCollapsed ? "calc(100vw - 70px)" : "calc(100vw - 200px)",
       }}
     >
       <div className={styles.header}>
@@ -122,11 +121,7 @@ const UserKpiBoard = () => {
           {error}
         </motion.div>
       ) : !userId || kpis.length === 0 ? (
-        <motion.div
-          className={styles.emptyState}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-        >
+        <motion.div className={styles.emptyState} initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           <div className={styles.emptyIllustration} />
           <h3>No KPIs found</h3>
           <p>This user doesn't have any KPIs assigned yet</p>
@@ -152,8 +147,8 @@ const UserKpiBoard = () => {
             onClose={() => setIsDetailOpen(false)}
             kpi={selectedKpi}
             isUserView={true}
-            isCreator={false} // 💡 explicitly pass
-            isAssignedUser={true} // 💡 explicitly pass
+            isCreator={false}
+            isAssignedUser={true}
             viewedUserId={userId}
           />
         )}

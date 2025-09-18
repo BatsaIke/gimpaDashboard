@@ -7,12 +7,13 @@ import {
   createUser,
   getStaff,
   getUserById,
-  updateUser,
   deleteUser,
   resetPassword,
   changePassword,
-  signupSuperAdmin
-} from '../controllers/authController';
+  signupSuperAdmin,
+  getMe
+} from '../controllers/authController/authController';
+import { updateUser } from '../controllers/authController/updateUser/updateUser';
 
 const router = express.Router();
 
@@ -38,5 +39,7 @@ router.post('/signup/super-admin', signupSuperAdmin);
 /* Password ops (protected) */
 router.post('/users/:id/reset-password', verifyToken, resetPassword);
 router.post('/users/:id/change-password', verifyToken, changePassword);
+router.get('/me', verifyToken, getMe);
+
 
 export default router;

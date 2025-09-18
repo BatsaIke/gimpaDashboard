@@ -13,12 +13,11 @@ const KpiDetailLeftPanel = ({
   isUserView,
   handleKpiStatusChange,
   handleDeliverableStatusChange,
-  handleAttachChange,
   handleScoreChange,
   handleSave,
   handleCancel,
   saving,
-  onBookMeeting,
+  viewedUserId
 }) => (
   <div className={styles.leftColInner}>
     <KpiMainFields
@@ -39,9 +38,8 @@ const KpiDetailLeftPanel = ({
         isAssignedUser={isAssignedUser}
         isUserView={isUserView}
         onDeliverableStatusChange={handleDeliverableStatusChange}
-        onAttachChange={handleAttachChange}
         onScoreChange={handleScoreChange}
-        onBookMeeting={onBookMeeting}  // pass index up to parent
+       reviewTargetUserId={viewedUserId}
       />
     ) : (
       <p className={styles.noDeliverables}>No deliverables added yet</p>

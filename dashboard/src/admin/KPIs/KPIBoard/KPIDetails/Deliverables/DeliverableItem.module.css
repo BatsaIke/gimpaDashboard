@@ -238,17 +238,56 @@
 }
 
 .discrepancyBannerResolved {
-  background: #ecfdf5;
+  background: linear-gradient(135deg, #e0f2fe, #ecfdf5);
   border-left: 4px solid #10b981;
-  padding: 8px 12px;
-  margin: 12px 0;
-  border-radius: 6px;
+  padding: 16px 20px;
+  border-radius: 12px;
+  margin: 1.5rem 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.1);
+  animation: fadeIn 0.4s ease-out;
 }
+
+
 
 .discrepancyIconResolved {
   color: #10b981;
-  margin-right: 6px;
+  font-size: 1.2rem;
 }
+
+
+.discrepancyResolved {
+  background: linear-gradient(135deg, #e0f2fe, #ecfdf5);
+  border-left: 4px solid #10b981;
+  padding: 16px 20px;
+  border-radius: 12px;
+  margin: 24px 0;
+  color: #064e3b;
+  font-size: 0.95rem;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.1);
+  animation: fadeIn 0.4s ease-out;
+}
+.discrepancyText {
+  font-weight: 500;
+  color: #064e3b;
+  font-size: 0.95rem;
+}
+
+.discrepancyResolved strong {
+  font-weight: 600;
+  color: #047857;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .header {

@@ -1,36 +1,40 @@
+/* src/components/DiscrepancyTable/PaginationControls.module.css */
+
 .paginationContainer {
-    display: flex;
-    justify-content: flex-end; /* Align pagination to the bottom right */
-    align-items: center;
-    margin-top: 20px;
-    gap: 10px;
-  }
-  
-  .pageButton {
-    background-color: #fff;
-    color: #16cb7f;
-    border: 1px solid #16cb7f;
-    border-radius: 5px;
-    padding: 8px 12px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
-  }
-  
-  .pageButton:hover {
-    background-color: #16cb7f;
-    color: #fff;
-  }
-  
-  .pageButton.active {
-    background-color: #16cb7f;
-    color: #fff;
-    border-color: #16cb7f;
-    font-weight: bold;
-  }
-  
-  .pageInfo {
-    font-size: 1rem;
-    color: #555;
-  }
-  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  gap: 15px; /* Space between elements */
+}
+
+.paginationButton {
+  background-color: #4CAF50; /* Green */
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px; /* Rounded corners */
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.paginationButton:hover:not(:disabled) {
+  background-color: #45a049; /* Darker green on hover */
+  transform: translateY(-2px); /* Slight lift effect */
+}
+
+.paginationButton:disabled {
+  background-color: #cccccc; /* Grey for disabled */
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+.pageInfo {
+  font-size: 1em;
+  color: #333;
+  font-weight: 500;
+}

@@ -23,6 +23,12 @@ import {
 import UserKpiBoard from "./admin/KPIs/KPIBoard/UserKpiBoard/UserKpiBoard";
 import { fetchMyProfile, logout } from "./actions/authAction";
 import DiscrepanciesPage from "./admin/Descrepancy/DiscrepanciesPage";
+import NetworkModal from "./UI/modal/NetworkModal";
+import ContactPage from "./pages/Contact/Contactpage";
+import NotFound from "./components/notFound/NotFound";
+import InstructionsPage from "./pages/Instructions/InstructionsPage";
+import Dashboard from "./admin/Dashboard/Dashboard";
+import ProfilePage from "./pages/Profile/ProfilePage";
 
 function App() {
   const dispatch = useDispatch();
@@ -67,32 +73,44 @@ function App() {
     <>
       {!isAuthPage && <Header />}
       <Alert />
+      {/* <NetworkModal />  */}
       <div className="container">
         <Routes>
           <Route path="/" element={<Navigate to="/admin/kpis" />} />
 
           {/* Public Routes */}
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+                    <Route path="/instructions" element={<InstructionsPage />} />
+
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/change-password" element={<ChangePasswordPage />} />
           <Route path="/admin/login" element={<AdminLoginPage />} />
 
           {/* Protected Admin Routes */}
-          <Route path="/admin/*" element={<AdminLayout />}>
-            <Route element={<PrivateRoute />}>
-              <Route path="departments" element={<DepartmentPage />} />
-              <Route path="users" element={<EmployeesPage />} />
-              <Route path="kpis" element={<KpiBoard />} />
-              <Route path="feedback" element={<DiscrepanciesPage />} />
+<Route path="/admin/*" element={<AdminLayout />}>
+  <Route element={<PrivateRoute />}>
+    {/* Default redirect: /admin → /admin/dashboard */}
+    <Route index element={<Navigate to="dashboard" replace />} />
 
-              <Route
-                path="user-kpis/:userId/:username"
-                element={<UserKpiBoard />}
-              />
+    <Route path="dashboard" element={<Dashboard />} />
+    <Route path="departments" element={<DepartmentPage />} />
+    <Route path="users" element={<EmployeesPage />} />
+    <Route path="kpis" element={<KpiBoard />} />
+    <Route path="feedback" element={<DiscrepanciesPage />} />
+    <Route
+      path="user-kpis/:userId/:username"
+      element={<UserKpiBoard />}
+    />
+    <Route path="report" element={<ReportsPage />} />
+        <Route path="profile" element={<ProfilePage />} />
 
-              <Route path="report" element={<ReportsPage />} />
-            </Route>
-          </Route>
+  </Route>
+</Route>
+
+
+          {/* 404 Route - Catch all unmatched routes */}
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
     </>

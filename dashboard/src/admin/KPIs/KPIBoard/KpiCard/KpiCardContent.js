@@ -1,6 +1,6 @@
-import React, { memo, useState } from "react";
+import React, { memo, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FiMoreVertical, FiEdit2, FiTrash2, FiDownload } from "react-icons/fi";
+import { FiMoreVertical, FiEdit2, FiTrash2 } from "react-icons/fi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faClipboardCheck,
@@ -8,30 +8,33 @@ import {
   faUserTie,
   faCalendarAlt,
   faChartLine,
-  faDownload,
   faHourglassHalf,
   faSpinner,
   faCheckCircle,
   faAward
 } from "@fortawesome/free-solid-svg-icons";
-
-
-
 import styles from "./KpiCard.module.css";
 
 const statusColorMap = {
-  Pending: "#EF4444",       // Red
-  "In Progress": "#F59E0B", // Amber
-  Completed: "#3B82F6",     // Blue
-  Approved: "#10B981"       // Green
+  Pending: "#EF4444",
+  "In Progress": "#F59E0B",
+  Completed: "#3B82F6",
+  Approved: "#10B981",
 };
+
 const statusIconMap = {
   Pending: faHourglassHalf,
   "In Progress": faSpinner,
   Completed: faCheckCircle,
-  Approved: faAward
+  Approved: faAward,
 };
 
+/** Truncate by words (keeps layout stable). */
+const truncateWords = (str = "", maxWords = 24) => {
+  const parts = String(str).trim().split(/\s+/);
+  if (parts.length <= maxWords) return str;
+  return parts.slice(0, maxWords).join(" ") + "…";
+};
 
 const KpiActions = ({ onEdit, onDelete, isUserView }) => {
   const [showMenu, setShowMenu] = useState(false);
@@ -94,20 +97,19 @@ const KpiCardContent = ({
   isAssignedUser,
   isUserView,
   onEditKpi,
-  onDeleteKpi
+  onDeleteKpi,
 }) => {
-  const statusColor = statusColorMap[kpi.status] || "#6B7280"; // Default gray
+  const statusColor = statusColorMap[kpi.status] || "#6B7280";
 
-  
+  // pre-truncate description text (fast + stable)
+  const shortDesc = useMemo(
+    () => truncateWords(kpi?.description ?? "", 24), // adjust count if needed
+    [kpi?.description]
+  );
+
   return (
-    <motion.div
-      className={styles.card}
-      whileHover={{ y: -4 }}
-    >
-      <div
-        className={styles.cardHeader}
-        style={{ background: statusColor }}
-      >
+    <motion.div className={styles.card} whileHover={{ y: -4 }}>
+      <div className={styles.cardHeader} style={{ background: statusColor }}>
         <div className={styles.statusIcon}>
           <FontAwesomeIcon
             icon={statusIconMap[kpi.status]}
@@ -131,7 +133,8 @@ const KpiCardContent = ({
       <div className={styles.cardBody}>
         <div className={styles.kpiDescription}>
           <FontAwesomeIcon icon={faClipboardCheck} className={styles.icon} />
-          <p>{kpi.description}</p>
+          {/* clamp words + visually clamp to lines */}
+          <p className={`${styles.descClamp}`}>{shortDesc}</p>
         </div>
 
         <div className={styles.infoRow}>
@@ -178,28 +181,6 @@ const KpiCardContent = ({
           </div>
         )}
       </div>
-
-      {kpi.evidence?.length > 0 && (
-        <div className={styles.cardFooter}>
-          <h4>
-            <FontAwesomeIcon icon={faDownload} className={styles.icon} />
-            Evidence
-          </h4>
-          <div className={styles.evidenceList}>
-            {kpi.evidence.map((filePath, idx) => (
-              <a
-                key={`evidence-${idx}-${filePath}`}
-                href={filePath}
-                download
-                className={styles.downloadLink}
-                onClick={(e) => e.stopPropagation()}
-              >
-                <FiDownload size={14} /> Evidence {idx + 1}
-              </a>
-            ))}
-          </div>
-        </div>
-      )}
     </motion.div>
   );
 };

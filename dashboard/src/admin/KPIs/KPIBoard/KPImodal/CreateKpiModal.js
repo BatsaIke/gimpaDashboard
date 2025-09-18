@@ -10,10 +10,10 @@ import { fetchEmployees } from "../../../../actions/authAction";
 
 import KpiMainFields from "../KpiMainFields";
 import UserAndRoleSelection from "../UserAndRoleSelection";
-import DeliverablesSection from "../DeliverableSession/DeliverablesSection";
 
 import styles from "./CreateKpiModal.module.css";
 import { fetchKpiHeaders } from "../../../../actions/kpiHeaderActions";
+import DeliverablesSection from "../DeliverableCreation/DeliverablesSection";
 
 const CreateKpiModal = ({ isOpen, onClose, selectedHeaderId }) => {
   const dispatch = useDispatch();
@@ -83,13 +83,21 @@ const validateForm = () => {
     errors.deliverables = "At least one deliverable is required";
   } else {
     newKpi.deliverables.forEach((deliverable, index) => {
-      if (!deliverable.title.trim()) {
-        errors[`deliverable-title-${index}`] = "Title is required";
-      }
-      if (!deliverable.timeline) {
-        errors[`deliverable-timeline-${index}`] = "Timeline is required";
-      }
-    });
+  if (!deliverable.title.trim()) {
+    errors[`deliverable-title-${index}`] = "Title is required";
+  }
+
+  if (deliverable.isRecurring) {
+    if (!deliverable.recurrencePattern?.trim()) {
+      errors[`deliverable-recurrencePattern-${index}`] = "Recurrence pattern is required";
+    }
+  } else {
+    if (!deliverable.timeline) {
+      errors[`deliverable-timeline-${index}`] = "Timeline is required";
+    }
+  }
+})
+
   }
   
   setFormErrors(errors);

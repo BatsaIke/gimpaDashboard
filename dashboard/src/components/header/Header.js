@@ -6,9 +6,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBell,
   faChevronDown,
-  faUserCircle,
   faBars,
   faSignOutAlt,
+  faEnvelope,
+  faBook
 } from "@fortawesome/free-solid-svg-icons";
 import styles from "./Header.module.css";
 import MobileMenu from "./MobileMenu";
@@ -22,18 +23,16 @@ const Header = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef();
 
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
-
-  const toggleDropdown = () => {
-    setIsDropdownOpen((prev) => !prev);
-  };
+  const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
+  const toggleDropdown = () => setIsDropdownOpen((prev) => !prev);
 
   const handleLogout = () => {
     dispatch(logout());
     navigate("/login");
   };
+
+  const navigateToContact = () => navigate("/contact");
+  const navigateToInstructions = () => navigate("/instructions");
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -50,7 +49,25 @@ const Header = () => {
   return (
     <>
       <header className={styles.header}>
-        <div className={styles.logo}>Syst</div>
+        {/* ✅ Logo now clickable to dashboard */}
+        <div
+          className={styles.logo}
+          onClick={() => navigate("/admin/dashboard")}
+        >
+          Syst
+        </div>
+
+        {/* Navigation Items */}
+        <nav className={styles.nav}>
+          <button className={styles.navItem} onClick={navigateToInstructions}>
+            <FontAwesomeIcon icon={faBook} className={styles.navIcon} />
+            <span>Instructions</span>
+          </button>
+          <button className={styles.navItem} onClick={navigateToContact}>
+            <FontAwesomeIcon icon={faEnvelope} className={styles.navIcon} />
+            <span>Contact</span>
+          </button>
+        </nav>
 
         <div className={styles.rightSection}>
           <FontAwesomeIcon icon={faBell} className={styles.bellIcon} />
@@ -69,10 +86,13 @@ const Header = () => {
               <div className={styles.userRole}>{user?.role}</div>
             </div>
             <FontAwesomeIcon icon={faChevronDown} className={styles.arrowIcon} />
-            
+
             <div className={styles.dropdownMenu}>
               <button className={styles.dropdownItem} onClick={handleLogout}>
-                <FontAwesomeIcon icon={faSignOutAlt} className={styles.dropdownIcon} />
+                <FontAwesomeIcon
+                  icon={faSignOutAlt}
+                  className={styles.dropdownIcon}
+                />
                 <span>Logout</span>
               </button>
             </div>
@@ -86,7 +106,12 @@ const Header = () => {
         </div>
       </header>
 
-      <MobileMenu isOpen={isMobileMenuOpen} onClose={toggleMobileMenu} />
+      <MobileMenu
+        isOpen={isMobileMenuOpen}
+        onClose={toggleMobileMenu}
+        onContactNavigate={navigateToContact}
+        onInstructionsNavigate={navigateToInstructions}
+      />
     </>
   );
 };

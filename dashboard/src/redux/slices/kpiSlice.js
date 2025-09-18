@@ -1,10 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 import api from "../../api";
 
+const toKey = (v) => (v == null ? "" : String(v));
+
 const initialState = {
-  items: [], // List of all KPIs
-  userKpis: {}, // Object to store KPIs by user ID
-  loading: false,
+  items: [],           // all KPIs (generic list)
+  userKpis: {},        // per-user KPIs cache: { [userId: string]: Kpi[] }
+  loading: false,      // global loading flag (ok to keep simple)
   error: null,
   movingKpiIds: [],
 };
@@ -17,79 +19,76 @@ const kpiSlice = createSlice({
       state.items = action.payload;
     },
     setUserKpis: (state, action) => {
-      const { userId, kpis } = action.payload;
-      // Safely initialize userKpis if undefined
-      if (!state.userKpis) {
-        state.userKpis = {};
-      }
-      state.userKpis[userId] = kpis;
+      const { userId, kpis } = action.payload || {};
+      const key = toKey(userId);
+      if (!state.userKpis) state.userKpis = {};
+      state.userKpis[key] = Array.isArray(kpis) ? kpis : [];
     },
     addKpi: (state, action) => {
       state.items.push(action.payload);
     },
     updateKpi: (state, action) => {
       const updated = action.payload;
-      const index = state.items.findIndex((kpi) => kpi._id === updated._id);
-      if (index !== -1) {
-        state.items[index] = updated;
-      }
-      // Safely update in userKpis if present
+      // update in generic list
+      const i = state.items.findIndex((k) => String(k._id) === String(updated._id));
+      if (i !== -1) state.items[i] = updated;
+
+      // update in every cached user list that contains it
       if (state.userKpis) {
-        Object.keys(state.userKpis).forEach(userId => {
-          const userIndex = state.userKpis[userId]?.findIndex(k => k._id === updated._id);
-          if (userIndex !== -1) {
-            state.userKpis[userId][userIndex] = updated;
-          }
+        Object.keys(state.userKpis).forEach((uid) => {
+          const arr = state.userKpis[uid] || [];
+          const j = arr.findIndex((k) => String(k._id) === String(updated._id));
+          if (j !== -1) arr[j] = updated;
         });
       }
     },
     updateDeliverableStatus: (state, action) => {
       const { kpiId, deliverableIndex, status } = action.payload;
-      // Update in main items
-      const kpi = state.items.find((k) => k._id === kpiId);
-      if (kpi && kpi.deliverables[deliverableIndex]) {
+      // generic list
+      const kpi = state.items.find((k) => String(k._id) === String(kpiId));
+      if (kpi?.deliverables?.[deliverableIndex]) {
         kpi.deliverables[deliverableIndex].status = status;
       }
-      // Safely update in userKpis if present
+      // all cached user lists
       if (state.userKpis) {
-        Object.keys(state.userKpis).forEach(userId => {
-          const userKpi = state.userKpis[userId]?.find(k => k._id === kpiId);
-          if (userKpi && userKpi.deliverables[deliverableIndex]) {
-            userKpi.deliverables[deliverableIndex].status = status;
+        Object.values(state.userKpis).forEach((list) => {
+          const uk = list.find((k) => String(k._id) === String(kpiId));
+          if (uk?.deliverables?.[deliverableIndex]) {
+            uk.deliverables[deliverableIndex].status = status;
           }
         });
       }
     },
     removeKpi: (state, action) => {
       const kpiId = action.payload;
-      state.items = state.items.filter((kpi) => kpi._id !== kpiId);
-      // Safely remove from userKpis if present
+      state.items = state.items.filter((k) => String(k._id) !== String(kpiId));
       if (state.userKpis) {
-        Object.keys(state.userKpis).forEach(userId => {
-          state.userKpis[userId] = state.userKpis[userId]?.filter(k => k._id !== kpiId) || [];
+        Object.keys(state.userKpis).forEach((uid) => {
+          state.userKpis[uid] = (state.userKpis[uid] || []).filter(
+            (k) => String(k._id) !== String(kpiId)
+          );
         });
       }
     },
     setLoading: (state, action) => {
-      state.loading = action.payload;
+      state.loading = !!action.payload;
     },
     setError: (state, action) => {
-      state.error = action.payload;
+      state.error = action.payload || null;
     },
-    // Add a reset action for userKpis
     resetUserKpis: (state) => {
+      // keep this action around if other parts rely on it, but DO NOT auto-call it in the thunk
       state.userKpis = {};
     },
     setMovingKpi: (state, action) => {
       state.movingKpiIds.push(action.payload);
     },
     unsetMovingKpi: (state, action) => {
-      state.movingKpiIds = state.movingKpiIds.filter(id => id !== action.payload);
+      state.movingKpiIds = state.movingKpiIds.filter((id) => id !== action.payload);
     },
   },
 });
 
-// Action creators
 export const {
   setKpis,
   setUserKpis,
@@ -104,21 +103,16 @@ export const {
   resetUserKpis,
 } = kpiSlice.actions;
 
-// Thunk action for fetching user KPIs
+// Fetch KPIs for a specific user without wiping cache
 export const fetchUserKpis = (userId) => async (dispatch) => {
+  const key = toKey(userId);
   try {
     dispatch(setLoading(true));
-    dispatch(resetUserKpis()); // Clear previous user KPIs
-    
-    const response = await api.get(`/kpis/user/${userId}`);
-    dispatch(setUserKpis({
-      userId,
-      kpis: response.data
-    }));
-    
+    const response = await api.get(`/kpis/user/${key}`);
+    dispatch(setUserKpis({ userId: key, kpis: response.data }));
     return response.data;
   } catch (error) {
-    dispatch(setError(error.message));
+    dispatch(setError(error?.message || "Failed to fetch user KPIs"));
     throw error;
   } finally {
     dispatch(setLoading(false));

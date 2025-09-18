@@ -1,0 +1,19 @@
+.departmentStatus { }
+.title { font-size: 1.2rem; margin-bottom: 1.5rem; font-weight: 600; }
+
+.departmentList { display: flex; flex-direction: column; gap: 1.2rem; }
+
+.departmentItem {
+  padding: 1rem; background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px; transition: all 0.3s ease;
+}
+.departmentItem:hover { background: rgba(255, 255, 255, 0.1); }
+
+.deptInfo { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem; }
+.deptName { font-size: 1rem; font-weight: 500; }
+.deptMeta { font-size: 0.8rem; opacity: 0.8; }
+
+.deptProgress { display: flex; align-items: center; gap: 1rem; }
+.progressBar { flex: 1; height: 8px; background: rgba(255, 255, 255, 0.1); border-radius: 4px; overflow: hidden; margin-bottom: 0; }
+.progressFill { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
+.progressPct { font-size: 0.9rem; font-weight: 600; min-width: 40px; text-align: right; }

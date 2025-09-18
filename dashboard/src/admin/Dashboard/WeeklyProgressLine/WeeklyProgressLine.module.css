@@ -1,0 +1,3 @@
+.wrapper { display: flex; flex-direction: column; }
+.title { font-size: 1.1rem; margin-bottom: 0.75rem; font-weight: 600; }
+.chartBox { width: 100%; height: 280px; }

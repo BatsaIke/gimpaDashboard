@@ -1,0 +1,21 @@
+.kpiProgress {
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+.kpiProgress:hover { background: rgba(255, 255, 255, 0.1); }
+
+.kpiHeader {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 0.8rem;
+}
+.title { font-size: 1rem; font-weight: 500; }
+
+.progressBar {
+  height: 8px; background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px; overflow: hidden; margin-bottom: 0.5rem;
+}
+.progressFill { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
+
+.kpiStats { display: flex; justify-content: space-between; font-size: 0.8rem; opacity: 0.8; }

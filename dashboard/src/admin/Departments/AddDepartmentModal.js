@@ -1,3 +1,4 @@
+// src/admin/Departments/AddDepartmentModal.jsx
 import React from "react";
 import styles from "./ModalForm.module.css";
 import Modal from "../../UI/modal/Modal";
@@ -12,19 +13,22 @@ const AddDepartmentModal = ({
   category,
   setCategory,
   onSave,
+  // NEW:
+  isTop = false,
+  parentId,
+  setParentId,
+  allowedParents = [],
+  makeCreatorHead = true,
+  setMakeCreatorHead,
 }) => (
   <Modal
     isOpen={isOpen}
     onClose={onClose}
-    header="Add New Faculty / Unit"
+    header={isTop ? "Add Faculty / Unit" : "Add Sub-Department"}
     footer={
       <>
-        <button onClick={onClose} className={styles.cancelButton}>
-          Cancel
-        </button>
-        <button onClick={onSave} className={styles.saveButton}>
-          Save
-        </button>
+        <button onClick={onClose} className={styles.cancelButton}>Cancel</button>
+        <button onClick={onSave} className={styles.saveButton}>Save</button>
       </>
     }
   >
@@ -56,6 +60,46 @@ const AddDepartmentModal = ({
         <option value="Faculty">Faculty</option>
         <option value="Unit">Unit</option>
       </select>
+
+      {/* Parent selection */}
+      <label>Parent:</label>
+      {isTop ? (
+        <select
+          value={parentId || ""}
+          onChange={(e) => setParentId(e.target.value || null)}
+          className={styles.select}
+        >
+          <option value="">— Root (Top-4 only) —</option>
+          {allowedParents.map((p) => (
+            <option key={p._id} value={p._id}>
+              {p.name}
+            </option>
+          ))}
+        </select>
+      ) : (
+        <select
+          value={parentId || ""}
+          onChange={(e) => setParentId(e.target.value || "")}
+          className={styles.select}
+        >
+          <option value="">— Select parent you supervise —</option>
+          {allowedParents.map((p) => (
+            <option key={p._id} value={p._id}>
+              {p.name}
+            </option>
+          ))}
+        </select>
+      )}
+
+      {/* Governance toggle: creator becomes head (your backend defaults to true) */}
+      <label className={styles.checkboxRow}>
+        <input
+          type="checkbox"
+          checked={!!makeCreatorHead}
+          onChange={(e) => setMakeCreatorHead(e.target.checked)}
+        />
+        <span>Make me Head of this department</span>
+      </label>
     </form>
   </Modal>
 );

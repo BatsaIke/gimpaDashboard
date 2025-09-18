@@ -1,0 +1,78 @@
+/* SupervisorContactActions.module.css */
+.actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.actionBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #f8fafc;
+}
+
+.actionBtn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+/* Specific button styles */
+.actionBtn:nth-child(1) { /* Call button */
+  background: rgba(74, 222, 128, 0.1);
+  color: #4ade80;
+}
+
+.actionBtn:nth-child(1):hover {
+  background: rgba(74, 222, 128, 0.2);
+}
+
+.whatsappBtn {
+  background: rgba(37, 211, 102, 0.1);
+  color: #25d366;
+}
+
+.whatsappBtn:hover {
+  background: rgba(37, 211, 102, 0.2);
+}
+
+.emailBtn {
+  background: rgba(96, 165, 250, 0.1);
+  color: #60a5fa;
+}
+
+.emailBtn:hover {
+  background: rgba(96, 165, 250, 0.2);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .actions {
+    gap: 0.5rem;
+  }
+  
+  .actionBtn {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .actionBtn {
+    flex: 1;
+    justify-content: center;
+  }
+}

@@ -8,6 +8,7 @@ import {
   faCheck,
   faHistory,
   faInfoCircle,
+  faArrowRightArrowLeft,
 } from "@fortawesome/free-solid-svg-icons";
 import ScoreComparisonChart from "../ScoreComparisonChart/ScoreComparisonChart";
 import HistoryTimeline from "../ScoreComparisonChart/HistoryTimeline";
@@ -15,39 +16,54 @@ import HistoryTimeline from "../ScoreComparisonChart/HistoryTimeline";
 const DiscrepancyDetailModal = ({
   isOpen,
   onClose,
-  discrepancy,
+  discrepancy, // This is the object from state.discrepancies.list
   onBookMeeting,
   onResolve,
 }) => {
   if (!isOpen || !discrepancy) return null;
 
-  // Get names
   const kpiName = discrepancy.kpiId?.name || `KPI ${discrepancy.kpiId?._id || "N/A"}`;
   const deliverableTitle =
-  discrepancy.kpiId?.deliverables?.[discrepancy.delIndex]?.title ||
-  `Deliverable ${discrepancy.delIndex + 1}`;
+    discrepancy.kpiId?.deliverables?.[discrepancy.deliverableIndex]?.title ||
+    `Deliverable ${discrepancy.deliverableIndex + 1}`;
 
-  // Determine if meeting is booked
-  const isMeetingBooked =
-    (discrepancy.meeting && discrepancy.meeting.timestamp) ||
-    (discrepancy.meetingDate && discrepancy.booked);
+  // PRIMARY SOURCE FOR MEETING STATUS: discrepancy.meeting or discrepancy.booked
+  const isMeetingBooked = !!discrepancy.meeting || discrepancy.booked;
 
-  // Use meeting info object (from discrepancy.meeting or fallback)
-  const meetingInfo = discrepancy.meeting || {
-    timestamp: discrepancy.meetingDate,
-    bookedBy: discrepancy.bookedBy,
-    notes: discrepancy.notes,
-  };
+  const meetingInfo = discrepancy.meeting || {}; // Use the actual `meeting` object if it exists
 
-  // Determine bookedBy display
- let bookedByDisplay = "User";
-if (meetingInfo.bookedBy) {
-  const { fullName, username, email } = meetingInfo.bookedBy;
-  bookedByDisplay = fullName || username || "User";
-  if (email) bookedByDisplay += ` (${email})`;
-}
+  let bookedByDisplay = "User";
+  if (meetingInfo.bookedBy) {
+    const { fullName, username, email } = meetingInfo.bookedBy;
+    bookedByDisplay = fullName || username || "User";
+    if (email) bookedByDisplay += ` (${email})`;
+  }
 
+  const renderScoreSnapshot = (label, score) => (
+    <div className={styles.scoreCard}>
+      <div className={styles.label}>{label}</div>
+      <div className={styles.value}>{score?.value ?? "—"}</div>
+      {score?.notes && (
+        <p className={styles.note}><strong>Notes:</strong> {score.notes}</p>
+      )}
+      {score?.supportingDocuments?.length > 0 && (
+        <div className={styles.files}>
+          <strong>Evidence:</strong>
+          <ul>
+            {score.supportingDocuments.map((url, i) => (
+              <li key={i}>
+                <a href={url} target="_blank" rel="noopener noreferrer">
+                  View File {i + 1}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  );
 
+  console.log(discrepancy, 'discrepancy in DiscrepancyDetailModal'); // Keep this log for debugging
 
   return ReactDOM.createPortal(
     <>
@@ -81,6 +97,25 @@ if (meetingInfo.bookedBy) {
             </div>
           </div>
 
+          {discrepancy.resolved && (
+            <div className={styles.scoreSection}>
+              <h4 className={styles.sectionTitle}>
+                <FontAwesomeIcon icon={faArrowRightArrowLeft} />
+                Score Change (Resolution)
+              </h4>
+              <div className={styles.scoreCompare}>
+                {renderScoreSnapshot("Previous Score", discrepancy.previousScore)}
+                {renderScoreSnapshot("Resolved Score", discrepancy.resolvedScore)}
+              </div>
+              {discrepancy.resolutionNotes && (
+                <div className={styles.reasonBox}>
+                  <h5>Resolution Notes</h5>
+                  <p>{discrepancy.resolutionNotes}</p>
+                </div>
+              )}
+            </div>
+          )}
+
           <div className={styles.meetingSection}>
             <h4 className={styles.sectionTitle}>
               <FontAwesomeIcon icon={faCalendarAlt} />
@@ -90,9 +125,7 @@ if (meetingInfo.bookedBy) {
               <div className={styles.meetingInfo}>
                 <div className={styles.infoRow}>
                   <span>Date:</span>
-                  <span>
-                    {new Date(meetingInfo.timestamp).toLocaleString()}
-                  </span>
+                  <span>{new Date(meetingInfo.timestamp).toLocaleString()}</span>
                 </div>
                 <div className={styles.infoRow}>
                   <span>Booked By:</span>
@@ -110,8 +143,8 @@ if (meetingInfo.bookedBy) {
                 <p>No meeting booked yet</p>
                 <button
                   onClick={() => {
-                    onClose();
-                    onBookMeeting(discrepancy);
+                    onClose(); // Close this detail modal first
+                    onBookMeeting(discrepancy); // Then open the booking modal
                   }}
                   className={styles.bookButton}
                 >

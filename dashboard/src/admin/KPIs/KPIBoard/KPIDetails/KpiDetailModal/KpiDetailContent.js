@@ -1,11 +1,10 @@
 import React from "react";
 import CenteredTaskModal from "../../../../../UI/modal/CenteredTaskModal";
 import KpiDetailLeftPanel from "../KpiDetailModal/KpiDetailLeftPanel";
-import KpiMetaInfoPanel from "../../kpiMainBoard/KpiMetaInfoPanel";
+import KpiMetaInfoPanel from "../../kpiMainBoard/KpiRightSide/KpiMetaInfoPanel";
 
 export const KpiDetailContent = ({
   isOpen,
-  onClose,
   localKpi,
   origDels,
   ALL_STATUSES,
@@ -13,12 +12,12 @@ export const KpiDetailContent = ({
   isAssignedUser,
   isUserView,
   handleKpiStatusChange,
+  viewedUserId,
   handleDeliverableStatusChange,
-  handleAttachChange,
+  // handleAttachChange,
   handleScoreChange,
   handleSave,
   handleCancel,
-  onBookMeeting,
   saving
 }) => (
   <CenteredTaskModal
@@ -32,14 +31,13 @@ export const KpiDetailContent = ({
         ALL_STATUSES={ALL_STATUSES}
         isCreator={isCreator}
         isAssignedUser={isAssignedUser}
+        viewedUserId={viewedUserId}
         isUserView={isUserView}
         handleKpiStatusChange={handleKpiStatusChange}
         handleDeliverableStatusChange={handleDeliverableStatusChange}
-        handleAttachChange={handleAttachChange}
         handleScoreChange={handleScoreChange}
         handleSave={handleSave}
         handleCancel={handleCancel}
-        onBookMeeting={onBookMeeting}
         saving={saving}
       />
     }

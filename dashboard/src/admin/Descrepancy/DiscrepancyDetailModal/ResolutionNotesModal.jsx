@@ -2,32 +2,60 @@ import React, { useState } from "react";
 import ReactDOM from "react-dom";
 import styles from "./ResolutionNotesModal.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes, faStickyNote } from "@fortawesome/free-solid-svg-icons";
+import { faTimes, faStickyNote, faFileUpload, faStar } from "@fortawesome/free-solid-svg-icons";
 
-const ResolutionNotesModal = ({
-  isOpen,
-  onClose,
-  onConfirm,
-  discrepancy
-}) => {
+const ResolutionNotesModal = ({ isOpen, onClose, onConfirm, discrepancy }) => {
   const [resolutionNotes, setResolutionNotes] = useState("");
-  const [apiError, setApiError] = useState(null); // New state for API errors
+  const [newScore, setNewScore] = useState("");
+  const [file, setFile] = useState(null);
+  const [apiError, setApiError] = useState(null);
+  const [scoreError, setScoreError] = useState("");
 
   if (!isOpen) return null;
 
-  const handleSubmit = async (e) => { // Changed to async
+  const handleScoreChange = (e) => {
+    const value = e.target.value;
+    if (value === "") {
+      setNewScore("");
+      setScoreError("");
+      return;
+    }
+
+    const numValue = Number(value);
+    if (isNaN(numValue)) {
+      setScoreError("Please enter a valid number");
+      return;
+    }
+
+    if (numValue < 0 || numValue > 100) {
+      setScoreError("Score must be between 0 and 100");
+      return;
+    }
+
+    setNewScore(value);
+    setScoreError("");
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const trimmed = resolutionNotes.trim();
     if (!trimmed) {
       alert("Please enter resolution notes");
       return;
     }
-    
-    setApiError(null); // Reset error before new submission
+
+    if (scoreError) {
+      return;
+    }
+
+    setApiError(null);
     try {
-      await onConfirm(trimmed); // Assuming onConfirm returns a promise
+      await onConfirm({
+        notes: trimmed,
+        newScore: newScore ? Number(newScore) : undefined,
+        file,
+      });
     } catch (error) {
-      // Capture and display the API error
       setApiError(error.message || "Failed to submit resolution notes. Please try again.");
     }
   };
@@ -38,7 +66,7 @@ const ResolutionNotesModal = ({
       <div className={styles.modal}>
         <header className={styles.header}>
           <div className={styles.titleGroup}>
-            <h3>Add Resolution Notes</h3>
+            <h3>Resolve Discrepancy</h3>
             <p className={styles.subtitle}>
               Resolving: {discrepancy?.kpiId?.name || `KPI ${discrepancy?.kpiId}`}
             </p>
@@ -51,20 +79,47 @@ const ResolutionNotesModal = ({
         <form onSubmit={handleSubmit} className={styles.form}>
           <div className={styles.formGroup}>
             <label>
-              <FontAwesomeIcon icon={faStickyNote} />
-              Resolution Notes
+              <FontAwesomeIcon icon={faStickyNote} /> Resolution Notes
             </label>
             <textarea
               value={resolutionNotes}
-              onChange={e => setResolutionNotes(e.target.value)}
+              onChange={(e) => setResolutionNotes(e.target.value)}
               className={styles.textarea}
               rows={5}
-              placeholder="Explain clearly why the issue occurred and how it was resolved."
+              placeholder="Explain why the discrepancy happened and how it was resolved."
               required
             />
           </div>
 
-          {/* API Error Display */}
+          <div className={styles.formGroup}>
+            <label>
+              <FontAwesomeIcon icon={faStar} /> New Score (optional)
+            </label>
+            <input
+              type="number"
+              className={styles.input}
+              min={0}
+              max={100}
+              step="0.01"
+              value={newScore}
+              onChange={handleScoreChange}
+              placeholder="Enter corrected score (0-100)"
+            />
+            {scoreError && <span className={styles.errorText}>{scoreError}</span>}
+          </div>
+
+          <div className={styles.formGroup}>
+            <label>
+              <FontAwesomeIcon icon={faFileUpload} /> Supporting File (optional)
+            </label>
+            <input
+              type="file"
+              className={styles.input}
+              onChange={(e) => setFile(e.target.files[0])}
+              accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+            />
+          </div>
+
           {apiError && (
             <div className={styles.errorMessage}>
               {apiError}

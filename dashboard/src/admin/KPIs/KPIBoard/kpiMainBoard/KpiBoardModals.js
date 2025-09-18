@@ -1,9 +1,7 @@
+// src/components/KPIBoard/KpiBoard/KpiBoardModals.jsx
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import {
-  editKpiHeader,
-  createKpiHeader,
-} from "../../../../actions/kpiHeaderActions";
+import { editKpiHeader, createKpiHeader } from "../../../../actions/kpiHeaderActions";
 import CreateKpiModal from "../KPImodal/CreateKpiModal";
 import KpiDetailModal from "../KPIDetails/KpiDetailModal/KpiDetailModal";
 import Modal from "../../../../UI/modal/Modal";
@@ -27,22 +25,17 @@ const KpiBoardModals = ({
   headerBeingEdited,
   setHeaderBeingEdited,
 
-  // Possibly passing isCreator / isAssignedUser as well
+  // Also provided by parent (optional)
   isCreator,
   isAssignedUser,
 }) => {
   const dispatch = useDispatch();
 
-  // For "Create Header"
   const [newHeaderName, setNewHeaderName] = useState("");
-
-  // For "Edit Header"
   const [editedHeaderName, setEditedHeaderName] = useState("");
 
   useEffect(() => {
-    if (headerBeingEdited) {
-      setEditedHeaderName(headerBeingEdited.name || "");
-    }
+    if (headerBeingEdited) setEditedHeaderName(headerBeingEdited.name || "");
   }, [headerBeingEdited]);
 
   const handleCreateHeader = () => {
@@ -76,6 +69,8 @@ const KpiBoardModals = ({
           kpi={selectedKpi}
           isCreator={isCreator}
           isAssignedUser={isAssignedUser}
+          isUserView={false}            // 👈 Global board: updates are global
+          // viewedUserId not needed here
         />
       )}
 
@@ -86,9 +81,7 @@ const KpiBoardModals = ({
         header="Create KPI Header"
         footer={
           <div className={styles.modalActions}>
-            <button onClick={() => setCreateHeaderModalOpen(false)}>
-              Cancel
-            </button>
+            <button onClick={() => setCreateHeaderModalOpen(false)}>Cancel</button>
             <button onClick={handleCreateHeader}>Create</button>
           </div>
         }

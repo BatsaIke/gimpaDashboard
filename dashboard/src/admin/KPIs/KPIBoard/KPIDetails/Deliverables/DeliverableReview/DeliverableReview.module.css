@@ -1,0 +1,319 @@
+/* DeliverableReview.module.css */
+
+/* Card Container */
+.reviewCard {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 24px;
+  margin: 16px 0;
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Header */
+.reviewTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 1.5rem;
+  position: relative;
+  display: inline-block;
+}
+
+.reviewTitle::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 40px;
+  height: 3px;
+  background: linear-gradient(90deg, #6366f1, #10b981);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.reviewCard:hover .reviewTitle::after {
+  width: 100%;
+}
+
+/* Messages */
+.infoMessage {
+  background: rgba(253, 230, 138, 0.3);
+  color: #92400e;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+}
+
+/* Review Summary */
+.reviewSummary {
+  background: rgba(220, 252, 231, 0.5);
+  border-radius: 12px;
+  padding: 18px;
+  border-left: 4px solid #10b981;
+}
+
+.reviewSummary p {
+  margin: 8px 0;
+  color: #065f46;
+}
+
+.scoreValue {
+  font-weight: 700;
+  color: #1e40af;
+}
+
+/* Form Elements */
+.reviewForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.inputLabel {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #475569;
+}
+
+.scoreInput,
+.notesInput {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  font-size: 0.9rem;
+  background: rgba(241, 245, 249, 0.5);
+  transition: all 0.3s ease;
+}
+
+.scoreInput:focus,
+.notesInput:focus {
+  outline: none;
+  border-color: #818cf8;
+  box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.2);
+  background: white;
+}
+
+.notesInput {
+  min-height: 120px;
+  resize: vertical;
+}
+
+/* Button & Actions */
+.formActions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 8px;
+}
+.scoreInput {
+  color: #1e293b; /* dark color for text */
+}
+.saveButton {
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 500;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.saveButton:disabled {
+  background: #cbd5e1;
+  cursor: not-allowed;
+}
+
+.saveButton.saving {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  opacity: 0.8;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s ease-in-out infinite;
+}
+
+/* Messages */
+.errorMessage {
+  color: #dc2626;
+  font-size: 0.8rem;
+  padding: 8px 12px;
+  background: rgba(254, 226, 226, 0.5);
+  border-radius: 6px;
+}
+
+.validationMessage {
+  color: #64748b;
+  font-size: 0.8rem;
+  font-style: italic;
+}
+
+.evidenceSection {
+  margin-top: 16px;
+  padding: 12px 16px;
+  background: rgba(237, 233, 254, 0.4); /* soft indigo tint */
+  border: 1px dashed #8b5cf6;
+  border-radius: 10px;
+}
+
+.evidenceSection strong {
+  color: #4c1d95;
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.evidenceList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.evidenceLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  text-decoration: none;
+  color: #1e40af;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.evidenceLink:hover {
+  background: #eef2ff;
+  border-color: #c7d2fe;
+  color: #4338ca;
+}
+
+/* Section that lists ALL evidence the assignee provided */
+.assigneeEvidenceBox {
+  margin-bottom: 1.5rem;
+  padding: 12px 16px;
+  background: rgba(191, 219, 254, 0.4);      /* soft sky-blue */
+  border: 1px solid #93c5fd;
+  border-radius: 10px;
+}
+.assigneeEvidenceBox strong {
+  color: #0c4a6e;
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+/* Utility when no evidence exists */
+.noEvidence {
+  font-style: italic;
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+/* Utility margin-top */
+.mt16 { margin-top: 16px; }
+
+/* Upload block inside the review form */
+.uploadBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.fileInput { margin-top: 8px; }
+
+/* Generic list for both existing evidence & newly-picked files */
+.fileList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.fileList li {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* “×” remove button beside a picked file */
+.removeBtn {
+  background: none;
+  border: none;
+  color: #dc2626;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+/* Re-exported actions block (alias of .formActions) */
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+/* Generic error helper (matches your previous .errorMessage palette) */
+.error {
+  color: #dc2626;
+  font-size: 0.8rem;
+  padding: 8px 12px;
+  background: rgba(254, 226, 226, 0.5);
+  border-radius: 6px;
+}
+
+/* Animations */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .reviewCard {
+    padding: 18px;
+  }
+  
+  .reviewTitle {
+    font-size: 1.1rem;
+  }
+  
+  .saveButton {
+    padding: 10px 20px;
+  }
+}
+

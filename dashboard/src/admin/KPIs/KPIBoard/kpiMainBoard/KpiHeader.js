@@ -19,7 +19,6 @@ const KpiHeader = ({
 }) => {
   const { isCreator } = useKpiUserRole(header);
 
-  console.log(isCreator,"A HEADER");
   
 
   return (

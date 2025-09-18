@@ -1,24 +1,28 @@
-import React from "react";
-import styles from "./Pagination.module.css";
+import React from 'react';
+import styles from './Pagination.module.css'; // Create this CSS module for styling
 
-const Pagination = ({ totalPages, currentPage, onPageChange }) => {
-  const pages = Array.from({ length: totalPages }, (_, index) => index + 1);
-
+const PaginationControls = ({ currentPage, totalPages, onNext, onPrev }) => {
   return (
     <div className={styles.paginationContainer}>
-      {pages.map((page) => (
-        <button
-          key={page}
-          className={`${styles.pageButton} ${
-            currentPage === page ? styles.active : ""
-          }`}
-          onClick={() => onPageChange(page)}
-        >
-          {page}
-        </button>
-      ))}
+      <button
+        onClick={onPrev}
+        disabled={currentPage === 1}
+        className={styles.paginationButton}
+      >
+        Previous
+      </button>
+      <span className={styles.pageInfo}>
+        Page {currentPage} of {totalPages}
+      </span>
+      <button
+        onClick={onNext}
+        disabled={currentPage === totalPages}
+        className={styles.paginationButton}
+      >
+        Next
+      </button>
     </div>
   );
 };
 
-export default Pagination;
+export default PaginationControls;

@@ -1,115 +1,79 @@
-// src/components/EmployeeForm/EmployeeFormFields.jsx
-import React from 'react';
-import styles from './EmployeeFormFields.module.css';
+import React, { useMemo } from "react";
+import { useDispatch } from "react-redux";
+import styles from "./EmployeeFormFields.module.css";
+import BasicInfoFields from "./BasicInfoFields";
+import DepartmentsSelector from "./DepartmentsSelector";
+import GovernanceToggle from "./GovernanceToggle";
+
+
+const idOf = (x) => {
+  if (!x) return "";
+  if (typeof x === "object" && x._id) return String(x._id);
+  return String(x);
+};
 
 const EmployeeFormFields = ({
   formData,
-  handleChange,
+  onChange, // (name, value) => void
   loading,
   roles,
-  rankOptions,
-  departments
+  departments,
+  isTop,
+  editMode,
+  parentDepartmentId = null,
 }) => {
+  const dispatch = useDispatch();
+
+  // handlers shared by children
+  const set = (name) => (e) => onChange(name, e.target.value);
+  const onToggle = (name) => (e) => onChange(name, e.target.checked);
+
+  // keep the “roots first, then children” sort for edit mode
+  const presentIds = useMemo(
+    () => new Set((departments || []).map((d) => String(d._id))),
+    [departments]
+  );
+  const isChildInScope = (d) => !!idOf(d.parent) && presentIds.has(idOf(d.parent));
+
+  const sortedDepartments = useMemo(() => {
+    const list = departments || [];
+    const roots = list
+      .filter((d) => !idOf(d.parent))
+      .sort((a, b) => a.name.localeCompare(b.name));
+    const children = list
+      .filter((d) => idOf(d.parent))
+      .sort((a, b) => a.name.localeCompare(b.name));
+    return [...roots, ...children];
+  }, [departments]);
+
   return (
     <div className={styles.formGrid}>
-      <div className={styles.formGroup}>
-        <label className={styles.label}>
-          Username<span className={styles.required}>*</span>
-        </label>
-        <input
-          type="text"
-          name="username"
-          value={formData.username}
-          onChange={handleChange}
-          required
-          disabled={loading}
-          className={styles.inputField}
-          placeholder="Enter username"
-        />
-      </div>
+      <BasicInfoFields
+        formData={formData}
+        loading={loading}
+        roles={roles}
+        editMode={editMode}
+        set={set}
+      />
 
-      <div className={styles.formGroup}>
-        <label className={styles.label}>Email</label>
-        <input
-          type="email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-          disabled={loading}
-          className={styles.inputField}
-          placeholder="Enter email"
-        />
-      </div>
+      <DepartmentsSelector
+        formData={formData}
+        onChange={onChange}
+        loading={loading}
+        editMode={editMode}
+        parentDepartmentId={parentDepartmentId}
+        sortedDepartments={sortedDepartments}
+        isChildInScope={isChildInScope}
+        dispatch={dispatch}
+      />
 
-      <div className={styles.formGroup}>
-        <label className={styles.label}>Phone</label>
-        <input
-          type="tel"
-          name="phone"
-          value={formData.phone}
-          onChange={handleChange}
-          disabled={loading}
-          className={styles.inputField}
-          placeholder="Enter phone number"
-        />
-      </div>
-
-      <div className={styles.formGroup}>
-        <label className={styles.label}>Role</label>
-        <select
-          name="role"
-          value={formData.role}
-          onChange={handleChange}
-          disabled={loading || !roles.length}
-          className={styles.selectField}
-        >
-          {!roles.length ? (
-            <option>Loading roles...</option>
-          ) : (
-            roles.map((role) => (
-              <option key={role} value={role}>
-                {role}
-              </option>
-            ))
-          )}
-        </select>
-      </div>
-
-      <div className={styles.formGroup}>
-        <label className={styles.label}>Rank</label>
-        <select
-          name="rank"
-          value={formData.rank}
-          onChange={handleChange}
-          disabled={loading}
-          className={styles.selectField}
-        >
-          <option value="">-- Select Rank --</option>
-          {rankOptions.map((rank) => (
-            <option key={rank} value={rank}>
-              {rank}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      <div className={styles.formGroup}>
-        <label className={styles.label}>Department</label>
-        <select
-          name="department"
-          value={formData.department}
-          onChange={handleChange}
-          disabled={loading}
-          className={styles.selectField}
-        >
-          <option value="">-- Select Department --</option>
-          {departments.map((dept) => (
-            <option key={dept._id} value={dept._id}>
-              {dept.name}
-            </option>
-          ))}
-        </select>
-      </div>
+      <GovernanceToggle
+        formData={formData}
+        onToggle={onToggle}
+        loading={loading}
+        isTop={isTop}
+        editMode={editMode}
+      />
     </div>
   );
 };

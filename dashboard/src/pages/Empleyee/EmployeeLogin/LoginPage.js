@@ -32,7 +32,6 @@ const LoginPage = () => {
     if (result.success) {
       dispatch(set_Alert("Login successful", "success"));
       const role = result?.employee?.role;
-      console.log("User Role:", role);
       navigate("/");
     } else {
       dispatch(set_Alert("Invalid credentials", "error"));

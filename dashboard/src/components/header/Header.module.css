@@ -10,12 +10,18 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 2.5rem;
-  background-color: rgba(255, 255, 255, 0.98);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  /* Gradient + glass morphism */
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.85),
+    rgba(245, 245, 245, 0.75)
+  );
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.08);
   z-index: 1000;
   box-sizing: border-box;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.03);
   transition: all 0.3s ease;
 }
 
@@ -32,6 +38,41 @@
 
 .logo:hover {
   transform: scale(1.05);
+  cursor: pointer;
+}
+
+/*************************************
+  NAVIGATION
+*************************************/
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 1.5rem;
+  color: #444;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.navItem:hover {
+  background: rgba(22, 203, 127, 0.15);
+  color: #16cb7f;
+  transform: translateY(-1px);
+}
+
+.navIcon {
+  font-size: 0.9rem;
 }
 
 /*************************************
@@ -53,11 +94,12 @@
   transition: all 0.2s ease;
   padding: 0.5rem;
   border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .bellIcon:hover {
   color: #16cb7f;
-  background-color: rgba(22, 203, 127, 0.1);
+  background-color: rgba(22, 203, 127, 0.15);
   transform: translateY(-1px);
 }
 
@@ -73,10 +115,11 @@
   border-radius: 2rem;
   transition: all 0.3s ease;
   position: relative;
+  background: rgba(255, 255, 255, 0.15);
 }
 
 .userSection:hover {
-  background-color: rgba(0, 0, 0, 0.03);
+  background-color: rgba(0, 0, 0, 0.05);
 }
 
 .userInfo {
@@ -89,12 +132,12 @@
 .userName {
   font-weight: 600;
   font-size: 0.95rem;
-  color: #333;
+  color: #222;
 }
 
 .userRole {
   font-size: 0.8rem;
-  color: #888;
+  color: #666;
   font-weight: 400;
 }
 
@@ -119,8 +162,10 @@
   position: absolute;
   top: 3.5rem;
   right: 0;
-  background-color: #fff;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
   border-radius: 12px;
   overflow: hidden;
   z-index: 1000;
@@ -142,7 +187,7 @@
 .dropdownItem {
   padding: 0.75rem 1.5rem;
   font-size: 0.95rem;
-  color: #555;
+  color: #444;
   background-color: transparent;
   border: none;
   cursor: pointer;
@@ -155,7 +200,7 @@
 }
 
 .dropdownItem:hover {
-  background-color: #f8f8f8;
+  background: rgba(22, 203, 127, 0.12);
   color: #16cb7f;
   padding-left: 1.25rem;
 }
@@ -176,16 +221,44 @@
   padding: 0.5rem;
   border-radius: 50%;
   transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .mobileMenuIcon:hover {
-  background-color: rgba(0, 0, 0, 0.05);
+  background-color: rgba(22, 203, 127, 0.15);
   color: #16cb7f;
+}
+
+/*************************************
+  RESPONSIVE DESIGN
+*************************************/
+@media (max-width: 1024px) {
+  .nav {
+    gap: 0.5rem;
+  }
+  
+  .navItem {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+  }
+  
+  .navItem span {
+    display: none;
+  }
+  
+  .navIcon {
+    font-size: 1rem;
+    margin: 0;
+  }
 }
 
 @media (max-width: 768px) {
   .header {
     padding: 0 1.5rem;
+  }
+  
+  .nav {
+    display: none;
   }
   
   .mobileMenuIcon {
@@ -207,5 +280,19 @@
   .dropdownMenu {
     top: 3rem;
     right: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: 0 1rem;
+  }
+  
+  .logo {
+    font-size: 1.7rem;
+  }
+  
+  .bellIcon {
+    font-size: 1.1rem;
   }
 }

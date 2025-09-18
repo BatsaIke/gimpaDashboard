@@ -12,7 +12,11 @@
     margin: 0 auto;
     padding: 2rem;
   }
-  
+  .deptBadge {
+  margin-top: 4px;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
   .pageHeader {
     margin-bottom: 2rem;
   }

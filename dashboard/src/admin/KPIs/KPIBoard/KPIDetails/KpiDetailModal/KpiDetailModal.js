@@ -1,32 +1,34 @@
+// src/components/KPIBoard/KPIDetails/KpiDetailModal/KpiDetailModal.jsx
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updateKpiStatusOnly, editKpiDeliverables } from "../../../../../actions/kpiActions";
 import { fetchMyProfile as getUserDetails } from "../../../../../actions/authAction";
-import {
-  fetchDiscrepancies,
-  bookMeeting,
-} from "../../../../../actions/discrepancyActions";
+import { fetchDiscrepancies } from "../../../../../actions/discrepancyActions";
 import Spinner from "../../../../../UI/Spinner";
 import { KpiDetailContent } from "./KpiDetailContent";
-import { KpiMeetingModal } from "./KpiMeetingModal";
 
 const ALL_STATUSES = ["Pending", "In Progress", "Completed", "Approved"];
 
-const KpiDetailModal = ({ isOpen, onClose, kpi, isUserView }) => {
+const KpiDetailModal = ({
+  isOpen,
+  onClose,
+  kpi,
+  isUserView = false,
+  viewedUserId,         // required when isUserView=true
+  // Optional: you may pass these, but we also read them from kpi for safety
+  isCreator: isCreatorProp,
+  isAssignedUser: isAssignedUserProp,
+}) => {
   const dispatch = useDispatch();
-  const discrepancies = useSelector((s) => s.discrepancies.list);
 
   const [localKpi, setLocalKpi] = useState(null);
   const [origDels, setOrigDels] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [meeting, setMeeting] = useState({
-    open: false,
-    idx: null,
-    flagId: null,
-  });
 
-  const { isCreator, isAssignedUser } = kpi || {};
+  // prefer explicit props; fallback to kpi flags if present
+  const isCreator = typeof isCreatorProp === "boolean" ? isCreatorProp : !!kpi?.isCreator;
+  const isAssignedUser = typeof isAssignedUserProp === "boolean" ? isAssignedUserProp : !!kpi?.isAssignedUser;
 
   const freshKpi = useSelector((state) =>
     state.kpiHeaders.items
@@ -34,60 +36,99 @@ const KpiDetailModal = ({ isOpen, onClose, kpi, isUserView }) => {
       .find((kp) => kp._id === kpi?._id)
   );
 
+  const getScoped = (objOrMap, key) => {
+    if (!objOrMap || !key) return null;
+    if (typeof objOrMap.get === "function") return objOrMap.get(key) || null;
+    return objOrMap?.[key] || null;
+  };
+
+  // Refresh-local when headers bring a newer KPI
   useEffect(() => {
     if (freshKpi && freshKpi._id === localKpi?._id) {
-      setLocalKpi({
-        ...freshKpi,
-        deliverables: freshKpi.deliverables.map((d) => ({ ...d })),
-      });
-    }
-  }, [freshKpi, localKpi?._id]);
+      const scoped =
+        (isUserView && viewedUserId
+          ? getScoped(freshKpi?.userSpecific?.deliverables, viewedUserId)
+          : null) || freshKpi.deliverables;
 
+      const safeDels = Array.isArray(scoped) ? scoped : (freshKpi.deliverables || []);
+      setLocalKpi({ ...freshKpi, deliverables: safeDels.map((d) => ({ ...d })) });
+    }
+  }, [freshKpi, localKpi?._id, isUserView, viewedUserId]);
+
+  // On open, seed local state with viewer-scoped deliverables
   useEffect(() => {
     if (!isOpen || !kpi) return;
     setLoading(true);
-    setLocalKpi({
-      ...kpi,
-      deliverables: kpi.deliverables.map((d) => ({ ...d })),
-    });
-    setOrigDels(kpi.deliverables.map((d) => ({ ...d })));
 
-    dispatch(getUserDetails()).finally(() => setLoading(false));
-    dispatch(fetchDiscrepancies(kpi._id));
-  }, [isOpen, kpi, dispatch]);
+    const scoped =
+      (isUserView && viewedUserId
+        ? getScoped(kpi?.userSpecific?.deliverables, viewedUserId)
+        : null) || kpi.deliverables;
 
-  if (!isOpen || loading || !localKpi) {
-    return <Spinner fullPage />;
-  }
+    const safeDels = Array.isArray(scoped) ? scoped : (kpi.deliverables || []);
+    setLocalKpi({ ...kpi, deliverables: safeDels.map((d) => ({ ...d })) });
+    setOrigDels(safeDels.map((d) => ({ ...d })));
 
-  // KPI handlers
-  const handleKpiStatusChange = (status) => {
-    setLocalKpi((prev) => {
-      const next = { ...prev, status };
-      dispatch(updateKpiStatusOnly(prev._id, {
-        status,
-        promoteGlobally: isCreator,
-      }));
-      return next;
-    });
+    Promise.all([
+      dispatch(getUserDetails()),
+      dispatch(fetchDiscrepancies(kpi._id)),
+    ]).finally(() => setLoading(false));
+  }, [isOpen, kpi, dispatch, isUserView, viewedUserId]);
+
+  if (!isOpen || loading || !localKpi) return <Spinner fullPage />;
+
+  /* ---------------- KPI handlers ---------------- */
+
+  // 🔧 FIX: scope status change based on where we are
+  const handleKpiStatusChange = async (status) => {
+    setLocalKpi((prev) => ({ ...prev, status }));
+    try {
+      if (isUserView && viewedUserId) {
+        // creator (or someone) changing status on a user's board → scoped
+        await dispatch(
+          updateKpiStatusOnly(localKpi._id, {
+            status,
+            assigneeId: viewedUserId,
+            promoteGlobally: false,         // 👈 key change
+          })
+        );
+      } else {
+        // creator on their own/global board → global
+        await dispatch(
+          updateKpiStatusOnly(localKpi._id, {
+            status,
+            promoteGlobally: true,
+          })
+        );
+      }
+      // refresh the correct list
+      if (isUserView && viewedUserId) {
+        // your UserKpiBoard already refreshes after DnD;
+        // if you want modal to also refresh that list, dispatch here
+        // e.g., dispatch(fetchUserKpis(viewedUserId));
+      } else {
+        // refresh headers for global board
+        // e.g., dispatch(fetchKpiHeaders());
+      }
+    } catch (err) {
+      // optionally revert local state on error
+      console.error("Failed to update KPI status:", err);
+    }
   };
 
   const handleDeliverableStatusChange = (idx, status) => {
     setLocalKpi((prev) => {
       const nextArr = [...prev.deliverables];
       nextArr[idx] = { ...nextArr[idx], status };
-dispatch(editKpiDeliverables(prev._id, {
-  deliverables: nextArr,
-  assigneeId: isCreator && isUserView ? localKpi.assignedUsers?.[0] : undefined
-}));
-      return { ...prev, deliverables: nextArr };
-    });
-  };
 
-  const handleAttachChange = (idx, field, val) => {
-    setLocalKpi((prev) => {
-      const nextArr = [...prev.deliverables];
-      nextArr[idx] = { ...nextArr[idx], [field]: val };
+      dispatch(
+        editKpiDeliverables(prev._id, {
+          deliverables: nextArr,
+          // when creator is viewing a user board, patch the *user-specific* copy
+          assigneeId: isCreator && isUserView ? viewedUserId : undefined,
+        })
+      );
+
       return { ...prev, deliverables: nextArr };
     });
   };
@@ -108,21 +149,19 @@ dispatch(editKpiDeliverables(prev._id, {
       const patched = localKpi.deliverables.map((d) => ({
         ...d,
         hasSavedAssignee:
-          isAssignedUser &&
-          d.assigneeScore?.value !== undefined &&
-          d.notes?.trim(),
+          isAssignedUser && d.assigneeScore?.value !== undefined && d.notes?.trim(),
         hasSavedCreator:
-          isCreator &&
-          d.creatorScore?.value !== undefined &&
-          d.creatorNotes?.trim(),
+          isCreator && d.creatorScore?.value !== undefined && d.creatorNotes?.trim(),
       }));
-     await dispatch(
-  editKpiDeliverables(localKpi._id, {
-    status: localKpi.status,
-    deliverables: patched,
-    assigneeId: isCreator && isUserView ? localKpi.assignedUsers?.[0] : undefined
-  })
-);
+
+      await dispatch(
+        editKpiDeliverables(localKpi._id, {
+          status: localKpi.status,
+          deliverables: patched,
+          // IMPORTANT: route to viewer's userSpecific when creator is on user view
+          assigneeId: isCreator && isUserView ? viewedUserId : undefined,
+        })
+      );
       onClose();
     } catch (err) {
       console.error("Failed to save KPI:", err);
@@ -133,44 +172,9 @@ dispatch(editKpiDeliverables(prev._id, {
 
   const handleCancel = () => {
     onClose();
+    // optional hard refresh only for user view:
     if (isUserView) window.location.reload();
   };
-
-  const handleOpenMeeting = (idx) => {
-    const f = discrepancies.find(
-      (flag) =>
-        String(flag.kpiId?._id ?? flag.kpiId) === String(localKpi._id) &&
-        flag.delIndex === idx
-    );
-    if (!f) {
-      console.error("No discrepancy found", {
-        kpiId: localKpi._id,
-        delIndex: idx,
-        discrepancies,
-      });
-      return;
-    }
-    console.log("Discrepancy found, opening modal:", f);
-    setMeeting({ open: true, idx, flagId: f.id });
-  };
-
-  const handleSubmitMeeting = async (flagId, data) => {
-    const success = await dispatch(bookMeeting(flagId, data));
-    if (success) setMeeting({ open: false, idx: null, flagId: null });
-  };
-
-  const currentDeliverable =
-    meeting.idx != null ? localKpi.deliverables[meeting.idx] : null;
-  const deliverableTitle = currentDeliverable?.title || "";
-
-  const discrepancy =
-    meeting.idx != null
-      ? discrepancies.find(
-          (f) =>
-            String(f.kpiId) === String(localKpi._id) &&
-            String(f.delIndex) === String(meeting.idx)
-        )
-      : null;
 
   return (
     <>
@@ -185,19 +189,11 @@ dispatch(editKpiDeliverables(prev._id, {
         isUserView={isUserView}
         handleKpiStatusChange={handleKpiStatusChange}
         handleDeliverableStatusChange={handleDeliverableStatusChange}
-        handleAttachChange={handleAttachChange}
         handleScoreChange={handleScoreChange}
         handleSave={handleSave}
         handleCancel={handleCancel}
-        onBookMeeting={handleOpenMeeting}
         saving={saving}
-      />
-
-      <KpiMeetingModal
-        open={meeting.open}
-        onClose={() => setMeeting({ open: false, idx: null, flagId: null })}
-        discrepancy={discrepancy}
-        onSubmit={(data) => handleSubmitMeeting(meeting.flagId, data)}
+        viewedUserId={viewedUserId}
       />
     </>
   );

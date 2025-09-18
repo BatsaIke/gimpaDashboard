@@ -3,18 +3,24 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node src/index.ts",
-    "dev": "nodemon --watch src --exec ts-node src/index.ts"
+    "dev": "nodemon --watch src --ext ts,tsx --exec \"ts-node src/index.ts\"",
+  "build-server": "tsc",
+  "build-client": "npm install --prefix ../dashboard && npm run build --prefix ../dashboard",
+  "build": "npm run build-client && npm run build-server",
+  "start": "npm run build && node dist/index.js",
+    "typecheck": "tsc --noEmit"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "axios": "^1.10.0",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^3.0.2",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
+    "date-fns": "^4.1.0",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "express-session": "^1.18.1",
@@ -28,6 +34,7 @@
     "passport-google-oauth20": "^2.0.0"
   },
   "devDependencies": {
+    "@types/axios": "^0.14.4",
     "@types/bcrypt": "^5.0.2",
     "@types/bcryptjs": "^3.0.0",
     "@types/cookie-parser": "^1.4.8",
@@ -36,7 +43,7 @@
     "@types/express-session": "^1.18.1",
     "@types/jsonwebtoken": "^9.0.8",
     "@types/morgan": "^1.9.9",
-    "@types/multer": "^1.4.12",
+    "@types/multer": "^1.4.13",
     "@types/node": "^22.10.2",
     "@types/nodemailer": "^6.4.17",
     "@types/passport": "^1.0.17",

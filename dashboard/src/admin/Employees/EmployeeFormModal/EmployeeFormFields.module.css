@@ -1,75 +1,240 @@
-/* src/components/EmployeeFormFields.module.css */
 .formGrid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
-    background: linear-gradient(to bottom right, #002f5f, #2ca85c);
-    padding: 1.5rem;
-    border-radius: 8px;
-    color: white;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  background: linear-gradient(135deg, #002f5f 0%, #2ca85c 100%);
+  padding: 1.5rem;
+  border-radius: 12px;
+  color: #fff;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.required {
+  color: #ff6b6b;
+  margin-left: 0.25rem;
+}
+/* --- Toolbar: sticky + split sides --- */
+.toolbarSticky {
+  position: sticky;
+  top: 0;                          /* sticks to top of the scrollable area */
+  z-index: 2;
+  background: linear-gradient(135deg, rgba(0,47,95,.6), rgba(44,168,92,.55));
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255,255,255,.18);
+  padding: 0.5rem;
+  border-radius: 10px;
+}
+
+.toolbarLeft, .toolbarRight {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.checkboxToolbar { justify-content: space-between; }
+
+/* --- Search input (matches your inputField look) --- */
+.searchInput {
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,.28);
+  font-size: 0.95rem;
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+  min-width: 200px;
+}
+.searchInput::placeholder { color: rgba(255,255,255,.8); }
+.searchInput:focus {
+  outline: none;
+  border-color: rgba(255,255,255,.4);
+  box-shadow: 0 0 0 2px rgba(255,255,255,.18);
+  background: rgba(255,255,255,.18);
+}
+
+/* --- Make the list a responsive grid inside a capped box --- */
+.checkboxList {
+  /* keep your existing properties; add: */
+  padding: 0.75rem;
+  background: rgba(0,0,0,.12);
+}
+
+/* 1 column on small, 2 on >=720px */
+.checkboxListGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.5rem;
+  max-height: clamp(220px, 32vh, 340px); /* prevents giant panels */
+  overflow: auto;
+}
+@media (min-width: 720px) {
+  .checkboxListGrid { grid-template-columns: 1fr 1fr; }
+}
+
+/* Subtle scrollbars */
+.checkboxListGrid::-webkit-scrollbar { width: 8px; height: 8px; }
+.checkboxListGrid::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,.25);
+  border-radius: 999px;
+}
+.checkboxListGrid::-webkit-scrollbar-track { background: transparent; }
+
+/* Checkbox row chips align better in grid */
+.checkboxItem {
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.18);
+  padding: 0.5rem 0.6rem;
+  border-radius: 10px;
+}
+.checkboxItem input { transform: translateY(1px); }
+.checkboxText { gap: .4rem; }
+
+/* Small helper to dim text */
+.dim { opacity: .7; }
+
+.inputField {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  font-size: 1rem;
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+  transition: 0.2s ease-in-out;
+}
+
+.inputField::placeholder {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.inputField:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.22);
+  border-color: rgba(255, 255, 255, 0.35);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.18);
+}
+
+.inputField:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Selects reuse input look */
+.selectField {
+  composes: inputField;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1rem;
+  padding-right: 2rem;
+  cursor: pointer;
+}
+
+.selectField option {
+  background: #ffffff;
+  color: #111827;
+}
+
+/* Checkbox toolbar + list */
+.checkboxToolbar {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.smallBtn,
+.smallBtnSecondary {
+  padding: 0.35rem 0.6rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: 0.15s ease-in-out;
+}
+.smallBtn:hover,
+.smallBtnSecondary:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+.smallBtnSecondary {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.checkboxList {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.4rem;
+  max-height: 240px;
+  overflow: auto;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  padding: 0.6rem;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.checkboxItem {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.checkboxText {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.deptTag {
+  font-size: 0.72rem;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.18);
+  padding: 0.05rem 0.45rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.hint {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.emptyHint {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.9rem;
+}
+
+/* Governance toggle row */
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+}
+
+.note {
+  background: rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0.6rem 0.75rem;
+  border-radius: 10px;
+  font-size: 0.9rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .formGrid {
+    grid-template-columns: 1fr;
   }
-  
-  .formGroup {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  
-  .label {
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: white;
-  }
-  
-  .required {
-    color: #ff6b6b;
-    margin-left: 0.25rem;
-  }
-  
-  .inputField {
-    width: 100%;
-    padding: 0.75rem;
-    border-radius: 6px;
-    border: none;
-    font-size: 1rem;
-    background: rgba(255, 255, 255, 0.2);
-    color: white;
-    transition: 0.3s ease-in-out;
-  }
-  
-  .inputField::placeholder {
-    color: rgba(255, 255, 255, 0.7);
-  }
-  
-  .inputField:focus {
-    outline: none;
-    background: rgba(255, 255, 255, 0.3);
-    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
-  }
-  
-  .inputField:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
-  }
-  
-  .selectField {
-    composes: inputField;
-    appearance: none;
-    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-    background-repeat: no-repeat;
-    background-position: right 0.75rem center;
-    background-size: 1rem;
-    padding-right: 2rem;
-    cursor: pointer;
-  }
-  
-  .selectField option {
-    background: white;
-    color: black;
-  }
-  
-  @media (max-width: 768px) {
-    .formGrid {
-      grid-template-columns: 1fr;
-    }
-  }
+}

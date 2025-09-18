@@ -1,15 +1,15 @@
 // ───────────────────────────────────────────────────────────
-// src/utils/roleUtils.ts  ✨ UPDATED (adds Super Admin)
+// src/utils/roleUtils.ts  ✅ FINAL — with Top 4 helpers
 // ───────────────────────────────────────────────────────────
 
 /* ------------------------------------------------------------------
- * 1. Canonical role list (single source of truth)
+ * 1) Canonical role list (single source of truth)
  * ------------------------------------------------------------------ */
 export const ALL_ROLES = [
   /* Ultimate authority */
   "Super Admin",
 
-  /* Top‑tier */
+  /* Top-tier */
   "Rector",
   "Deputy Rector",
   "Secretary of the Institute",
@@ -20,14 +20,14 @@ export const ALL_ROLES = [
   "Associate Deans",
   "Dean of Students",
 
-  /* Academic directorates (Deputy‑Rector stream) */
+  /* Academic directorates (Deputy-Rector stream) */
   "Director of APQA",
   "Director of GTC",
   "Head of IP&D",
   "Librarian",
   "Director of Academic Affairs",
 
-  /* Non‑academic directorates (Secretary stream) */
+  /* Non-academic directorates (Secretary stream) */
   "Director of Human Resource",
   "Director of Estate and Municipal Services",
   "Director of Hospitality",
@@ -37,7 +37,7 @@ export const ALL_ROLES = [
   "Director of Medical and Health Services",
   "Director of Legal Compliance Office",
 
-  /* Mid‑tier academic */
+  /* Mid-tier academic */
   "Heads of Departments",
   "Campus Managers",
   "Heads of Centers",
@@ -54,17 +54,14 @@ export const ALL_ROLES = [
   "Heads of Units / Senior Assistant Registrars",
   "Assistant Registrars / Programme Coordinators",
   "Junior Assistant Registrars",
-  "Middle & Junior Staff"
-] as const satisfies readonly string[];
+  "Middle & Junior Staff",
+] as const;
 
-/** Type derived from the tuple above (literals, not string). */
 export type SystemRole = (typeof ALL_ROLES)[number];
-
-/** Mutable copy when you need a plain string[] (e.g. Zod enum). */
 export const ALL_ROLES_ARRAY: string[] = [...ALL_ROLES];
 
 /* ------------------------------------------------------------------
- * 2. Hierarchy map (direct reports only – read‑only arrays)        
+ * 2) Hierarchy (direct reports only)
  * ------------------------------------------------------------------ */
 type ReportsMap = Partial<Record<SystemRole, readonly SystemRole[]>>;
 
@@ -74,14 +71,14 @@ export const DIRECT_REPORTS: ReportsMap = {
     "Rector",
     "Deputy Rector",
     "Secretary of the Institute",
-    "Director of Internal Audit"
+    "Director of Internal Audit",
   ],
 
   /* Rector */
   "Rector": [
     "Deputy Rector",
     "Secretary of the Institute",
-    "Director of Internal Audit"
+    "Director of Internal Audit",
   ],
 
   /* Deputy Rector */
@@ -92,7 +89,7 @@ export const DIRECT_REPORTS: ReportsMap = {
     "Director of GTC",
     "Head of IP&D",
     "Librarian",
-    "Director of Academic Affairs"
+    "Director of Academic Affairs",
   ],
 
   /* Secretary */
@@ -105,7 +102,7 @@ export const DIRECT_REPORTS: ReportsMap = {
     "Director of Finance",
     "Director of Information Management Services",
     "Director of Medical and Health Services",
-    "Director of Legal Compliance Office"
+    "Director of Legal Compliance Office",
   ],
 
   /* Director of Internal Audit */
@@ -115,15 +112,11 @@ export const DIRECT_REPORTS: ReportsMap = {
   "Deans of Schools and Faculty": [
     "Associate Deans",
     "Deputy Registrars",
-    "Heads of Units / Senior Assistant Registrars"
+    "Heads of Units / Senior Assistant Registrars",
   ],
 
   /* Associate Dean */
-  "Associate Deans": [
-    "Heads of Departments",
-    "Campus Managers",
-    "Heads of Centers"
-  ],
+  "Associate Deans": ["Heads of Departments", "Campus Managers", "Heads of Centers"],
 
   /* HoDs / Campus / Centers */
   "Heads of Departments": ["Professors", "Institute's Scholars & Fellows"],
@@ -136,20 +129,20 @@ export const DIRECT_REPORTS: ReportsMap = {
 
   /* Associate Professors / Principals */
   "Associate Professors / Principal Lecturers": [
-    "Senior Lecturers / Senior Teaching / Senior Research Fellows"
+    "Senior Lecturers / Senior Teaching / Senior Research Fellows",
   ],
 
   /* Senior Lecturers */
   "Senior Lecturers / Senior Teaching / Senior Research Fellows": [
-    "Lecturers / Teaching / Research Fellows"
+    "Lecturers / Teaching / Research Fellows",
   ],
 
   /* Lecturers */
   "Lecturers / Teaching / Research Fellows": ["Assistant Lecturers"],
   "Assistant Lecturers": [],
 
-  /* Non‑academic director chain */
-  "Directors": ["Deputy Registrars"],
+  /* Non-academic director chain */
+  Directors: ["Deputy Registrars"],
   "Director of Academic Affairs": ["Deputy Registrars"],
   "Director of Human Resource": ["Deputy Registrars"],
   "Director of Estate and Municipal Services": ["Deputy Registrars"],
@@ -165,31 +158,64 @@ export const DIRECT_REPORTS: ReportsMap = {
 
   /* Heads of Units / SARs */
   "Heads of Units / Senior Assistant Registrars": [
-    "Assistant Registrars / Programme Coordinators"
+    "Assistant Registrars / Programme Coordinators",
   ],
 
   /* Assistant Registrars */
-  "Assistant Registrars / Programme Coordinators": [
-    "Junior Assistant Registrars"
-  ],
+  "Assistant Registrars / Programme Coordinators": ["Junior Assistant Registrars"],
 
   /* Junior Assistant Registrars */
   "Junior Assistant Registrars": ["Middle & Junior Staff"],
 
   /* Bottom */
-  "Middle & Junior Staff": []
+  "Middle & Junior Staff": [],
 } as const;
 
 /* ------------------------------------------------------------------
- * 3. Helper utilities                                               
+ * 3) Top roles helpers
  * ------------------------------------------------------------------ */
+export const TOP_ROLES = new Set<SystemRole>([
+  "Super Admin",
+  "Rector",
+  "Deputy Rector",
+  "Secretary of the Institute",
+]);
+
+export const isSuperAdmin = (role?: string): role is "Super Admin" => role === "Super Admin";
+export const isTopRole = (role?: string): role is SystemRole =>
+  !!role && (TOP_ROLES as Set<string>).has(role);
+
+/* ------------------------------------------------------------------
+ * 4) Access utilities (direct vs transitive)
+ * ------------------------------------------------------------------ */
+
+/** Direct reports only. */
 export function getAccessibleRoles(caller: SystemRole): SystemRole[] {
   return (DIRECT_REPORTS[caller] ?? []) as SystemRole[];
 }
 
-export function canAssignTo(caller: SystemRole, target: SystemRole): boolean {
-  return getAccessibleRoles(caller).includes(target);
+/** All transitive descendants (caller → … → leaf). */
+export function getAllDescendantRoles(caller: SystemRole): SystemRole[] {
+  const seen = new Set<SystemRole>();
+  const stack: SystemRole[] = [...(DIRECT_REPORTS[caller] ?? []) as SystemRole[]];
+
+  while (stack.length) {
+    const r = stack.pop()!;
+    if (!seen.has(r)) {
+      seen.add(r);
+      const next = (DIRECT_REPORTS[r] ?? []) as SystemRole[];
+      stack.push(...next);
+    }
+  }
+  return [...seen];
 }
 
-// A convenience check
-export const isSuperAdmin = (role?: string): role is 'Super Admin' => role === 'Super Admin';
+/**
+ * Can caller assign/act on target role?
+ *  - Top 4: always yes.
+ *  - Others: only if target is in transitive descendants.
+ */
+export function canAssignTo(caller: SystemRole, target: SystemRole): boolean {
+  if (isTopRole(caller)) return true;
+  return getAllDescendantRoles(caller).includes(target);
+}

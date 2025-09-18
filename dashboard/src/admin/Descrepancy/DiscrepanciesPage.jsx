@@ -2,17 +2,14 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styles from "./DiscrepanciesPage.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { 
-  faSpinner, 
-  faFlag, 
+import { faSpinner, faFlag } from "@fortawesome/free-solid-svg-icons";
 
-} from "@fortawesome/free-solid-svg-icons";
-
-import { 
-  fetchDiscrepancies, 
-  bookMeeting, 
-  resolveDiscrepancy 
+import {
+  fetchDiscrepancies,
+  bookMeeting,
+  resolveDiscrepancy
 } from "../../actions/discrepancyActions";
+
 import DiscrepancyTable from "./DiscrepancyTable/DiscrepancyTable";
 import DiscrepancyDetailModal from "./DiscrepancyDetailModal/DiscrepancyDetailModal";
 import MeetingBookingModal from "./DiscrepancyDetailModal/MeetingBookingModal";
@@ -20,15 +17,13 @@ import ResolutionNotesModal from "./DiscrepancyDetailModal/ResolutionNotesModal"
 
 const DiscrepanciesPage = () => {
   const dispatch = useDispatch();
-  const { list: discrepancies, loading } = useSelector(state => state.discrepancies);
+  const { list: discrepancies, loading } = useSelector((state) => state.discrepancies);
+
   const [selectedDiscrepancy, setSelectedDiscrepancy] = useState(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [isBookingOpen, setIsBookingOpen] = useState(false);
   const [isResolutionOpen, setIsResolutionOpen] = useState(false);
   const [kpiFilter, setKpiFilter] = useState("");
-
-  
-  
 
   useEffect(() => {
     dispatch(fetchDiscrepancies(kpiFilter));
@@ -45,13 +40,10 @@ const DiscrepanciesPage = () => {
   };
 
   const handleResolve = (discrepancy) => {
-  if (!discrepancy?.id) {
-    console.error("Invalid discrepancy data:", discrepancy);
-    return;
-  }
-  setSelectedDiscrepancy(discrepancy); // Make sure this is setting properly
-  setIsResolutionOpen(true);
-};
+    if (!discrepancy?.id) return;
+    setSelectedDiscrepancy(discrepancy);
+    setIsResolutionOpen(true);
+  };
 
   const handleMeetingBooked = async (data) => {
     if (!selectedDiscrepancy?.id) return;
@@ -62,27 +54,27 @@ const DiscrepanciesPage = () => {
     }
   };
 
- const handleResolutionConfirm = async (notes) => {
-  if (!selectedDiscrepancy?.id) {
-    console.error("No discrepancy selected for resolution");
-    return;
-  }
+  const handleResolutionConfirm = async ({ notes, newScore, file }) => {
+    if (!selectedDiscrepancy?.id) return;
 
-  try {
-    const success = await dispatch(
-      resolveDiscrepancy(selectedDiscrepancy.id, { 
-        resolutionNotes: notes 
-      })
-    );
-    
-    if (success) {
-      setIsResolutionOpen(false);
-      dispatch(fetchDiscrepancies(kpiFilter));
+    try {
+      const success = await dispatch(
+        resolveDiscrepancy(selectedDiscrepancy.id, {
+          resolutionNotes: notes,
+          newScore,
+          file
+        })
+      );
+
+      if (success) {
+        setIsResolutionOpen(false);
+        dispatch(fetchDiscrepancies(kpiFilter));
+      }
+    } catch (error) {
+      console.error("Resolution failed:", error);
     }
-  } catch (error) {
-    console.error("Resolution failed:", error);
-  }
-};
+  };
+
   return (
     <div className={styles.pageContainer}>
       <div className={styles.contentContainer}>
@@ -90,7 +82,7 @@ const DiscrepanciesPage = () => {
           <div className={styles.headerContent}>
             <h1 className={styles.pageTitle}>Discrepancy Management</h1>
             <div className={styles.filterControls}>
-              <select 
+              <select
                 value={kpiFilter}
                 onChange={(e) => setKpiFilter(e.target.value)}
                 className={styles.filterSelect}
