@@ -1,26 +1,38 @@
 // src/components/EmployeeTable/EmployeesGrouped.jsx
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useId } from "react";
 import styles from "./EmployeesGrouped.module.css";
 import EmployeeCard from "./EmployeeCard";
 
 const Section = ({ title, count, children, defaultOpen = false, depth = 0 }) => {
   const [open, setOpen] = useState(defaultOpen);
+  const uid = useId();
+  const contentId = `sec-${uid}`;
+  const headerId = `${contentId}-header`;
 
   return (
     <section
       className={styles.section}
       style={{ "--depth": depth }}
-      aria-expanded={open}
+      aria-labelledby={headerId}
     >
       <button
+        id={headerId}
         type="button"
         className={styles.sectionHeader}
         onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
+        aria-controls={contentId}
       >
         <div className={styles.headerLeft}>
           <span className={`${styles.chev} ${open ? styles.chevOpen : ""}`}>
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d="M4 6L8 10L12 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path
+                d="M4 6L8 10L12 6"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
             </svg>
           </span>
           <h3 className={styles.title}>{title}</h3>
@@ -28,10 +40,14 @@ const Section = ({ title, count, children, defaultOpen = false, depth = 0 }) => 
         <span className={styles.countBadge}>{count}</span>
       </button>
 
-      <div className={`${styles.sectionBody} ${open ? styles.open : ""}`}>
-        <div className={styles.sectionBodyInner}>
-          {children}
-        </div>
+      <div
+        id={contentId}
+        className={`${styles.sectionBody} ${open ? styles.open : ""}`}
+        hidden={!open}
+        role="region"
+        aria-labelledby={headerId}
+      >
+        <div className={styles.sectionBodyInner}>{children}</div>
       </div>
     </section>
   );

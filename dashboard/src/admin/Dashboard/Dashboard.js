@@ -39,33 +39,35 @@ const Dashboard = () => {
   const approved = 3;
   const pending = Math.max(0, totalKpis - (completed + inProgress + approved));
 
-  const stats = [
+  const stats = useMemo(() => [
     { title: "Total KPIs", value: String(totalKpis), change: 12, icon: faTasks, color: "#002F5F" },
     { title: "Completed", value: String(completed), change: 8, icon: faCheckCircle, color: "#2CA85C" },
     { title: "In Progress", value: String(inProgress), change: -3, icon: faClock, color: "#FF9800" },
     { title: "Discrepancies", value: "5", change: 2, icon: faExclamationTriangle, color: "#F44336" },
-  ];
+  ], [totalKpis, completed, inProgress]); // Dependencies added in case these values change
 
-  const kpis = [
+  const kpis = useMemo(() => [
     { title: "Student Enrollment", progress: 75, target: 80, status: "warning" },
     { title: "Faculty Development", progress: 90, target: 85, status: "completed" },
     { title: "Research Publications", progress: 60, target: 75, status: "warning" },
     { title: "Community Outreach", progress: 45, target: 70, status: "pending" },
-  ];
+  ], []);
 
-  const activities = [
+  const activities = useMemo(() => [
     { icon: faCheckCircle, description: 'KPI "Faculty Training" marked as completed', time: "2 hours ago" },
     { icon: faExclamationTriangle, description: "Discrepancy reported in Research Metrics", time: "5 hours ago" },
     { icon: faUsers, description: "New staff member added to Science Department", time: "1 day ago" },
     { icon: faTasks, description: "Quarterly review meeting scheduled", time: "2 days ago" },
-  ];
+  ], []);
 
-  const departments = [
+  // FIX: Wrapped the 'departments' array in useMemo to prevent it from being
+  // recreated on every render, which stabilizes its reference for other hooks.
+  const departments = useMemo(() => [
     { name: "Science", completed: 12, total: 15, performance: 80 },
     { name: "Arts", completed: 8, total: 12, performance: 67 },
     { name: "Engineering", completed: 10, total: 14, performance: 71 },
     { name: "Business", completed: 14, total: 16, performance: 88 },
-  ];
+  ], []);
 
   // ----- Chart transforms -----
   const statusPieData = useMemo(
@@ -84,7 +86,7 @@ const Dashboard = () => {
         name: d.name,
         completion: Math.round((d.completed / d.total) * 100),
       })),
-    [departments]
+    [departments] // Now this dependency is stable
   );
 
   const weeklyTrend = useMemo(

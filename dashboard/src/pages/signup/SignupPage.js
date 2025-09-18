@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link,} from "react-router-dom";
 import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
-import { createUser, signupSuperAdmin } from "../../actions/authAction";
+import {  signupSuperAdmin } from "../../actions/authAction";
 import { set_Alert } from "../../actions/alertAction";
 import Spinner from "../../UI/Spinner";
 import styles from "./SignupPage.module.css";
@@ -17,7 +17,6 @@ const SignupPage = () => {
     watch
   } = useForm();
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const password = watch("password");
 
   const onSubmit = async (data) => {

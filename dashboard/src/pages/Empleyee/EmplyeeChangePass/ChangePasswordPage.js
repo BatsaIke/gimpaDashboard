@@ -15,7 +15,6 @@ import { changeEmployeePassword } from "../../../actions/employeeActions";
 
 const ChangePasswordPage = () => {
   const dispatch = useDispatch();
-  const userId = useSelector((state) => state.auth.user?._id); // or however you store user
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
 

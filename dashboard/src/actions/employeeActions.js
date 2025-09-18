@@ -44,7 +44,6 @@ export const createEmployee = (employeeData) => async (dispatch, getState) => {
   dispatch(setLoading(true));
   try {
     // Get current user's role from Redux state
-    const { role } = getState().auth;
     
     // Optional: Frontend validation of role assignment
     // Backend will also validate this

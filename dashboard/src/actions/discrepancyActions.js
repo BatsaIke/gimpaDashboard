@@ -2,7 +2,7 @@
 import api from "../api";
 import {
   setLoading, setError, setList,
-  addFlag, markBooked, clearFlag
+  markBooked, clearFlag
 } from "../redux/slices/discrepancySlice";
 import apiErrorHandler from "../utils/apiHandleError";
 

@@ -1,5 +1,5 @@
 // src/components/KPIBoard/KPIDetails/Deliverables/DeliverableContent.jsx
-import React, { useMemo, useState, useEffect } from "react"; // Added useEffect
+import React, {  useEffect } from "react"; // Added useEffect
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faFileAlt,
@@ -41,7 +41,7 @@ const DeliverableContent = ({
   onSelectedOccurrenceLabelChange, // Callback to report selected label
 }) => {
   // Occurrence selection hook (manages selectedLabel internally)
-  const { occurrences, selectedLabel, setSelectedLabel, selectedOccurrence, nextDue } =
+  const { occurrences, selectedLabel, setSelectedLabel, selectedOccurrence } =
     useSelectedOccurrence(d);
 
   // NEW: Report the current selectedLabel to the parent (DeliverableItem) whenever it changes

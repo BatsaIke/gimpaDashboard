@@ -1,13 +1,15 @@
+// src/admin/KPIs/KPIBoard/KPIDetails/Deliverables/DeliverableReview/DeliverableReviewLogic.js
 import { useMemo, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { handleSaveDeliverable } from "../../../../../../utils/saveDeliverable";
 import { fetchUserKpis } from "../../../../../../actions/kpiActions";
 import { selectUserKpiById } from "../../../../../../utils/kpiSelectors";
 
-// Helper functions
+// Helpers
 const hasNumber = (v) => typeof v === "number" && !Number.isNaN(v);
 const pad = (n) => String(n).padStart(2, "0");
 const norm = (v) => (v == null ? "" : String(v));
+const EMPTY_ARR = Object.freeze([]);
 
 function inferPatternFromLabels(labels = []) {
   const sample = labels.find(Boolean) || "";
@@ -18,7 +20,7 @@ function inferPatternFromLabels(labels = []) {
   return "monthly";
 }
 
-function autoLabelFrom(occurrences = [], declaredPattern = "") {
+function autoLabelFrom(occ = EMPTY_ARR, declaredPattern = "") {
   const now = new Date();
   const y = now.getFullYear();
   const m = pad(now.getMonth() + 1);
@@ -26,7 +28,7 @@ function autoLabelFrom(occurrences = [], declaredPattern = "") {
   const h = pad(now.getHours());
   const pattern =
     (declaredPattern || "").toLowerCase() ||
-    inferPatternFromLabels(occurrences.map((o) => o?.periodLabel));
+    inferPatternFromLabels(occ.map((o) => o?.periodLabel));
   switch (pattern) {
     case "yearly": return `${y}`;
     case "daily": return `${y}-${m}-${d}`;
@@ -42,65 +44,69 @@ export const useDeliverableReview = ({
   assigneeId,
   selectedOccurrenceLabel,
   onSelectOccurrence,
-  onScoreChange
+  onScoreChange,
 }) => {
   const dispatch = useDispatch();
   const authUser = useSelector((s) => s.auth.user);
   const actorId = authUser?._id;
 
-  // Get user KPI data
+  // Pull KPI for the assignee
   const userKpi = useSelector((state) => selectUserKpiById(state, assigneeId, kpiId));
-  
-  // Extract ALL user-specific deliverables data
+
+  // Ensure KPI is loaded (no early returns)
+  useEffect(() => {
+    if (!userKpi && assigneeId) {
+      dispatch(fetchUserKpis(assigneeId));
+    }
+  }, [dispatch, assigneeId, userKpi]);
+
+  // Extract the user-specific deliverables array with a stable reference
   const userSpecificMap = userKpi?.userSpecific?.deliverables || {};
-  const allUserDeliverables = userSpecificMap[norm(assigneeId)] || [];
-  
+  const allUserDeliverables = useMemo(() => {
+    const arr = userSpecificMap[norm(assigneeId)];
+    return Array.isArray(arr) ? arr : EMPTY_ARR;
+  }, [userSpecificMap, assigneeId]);
+
   // Enhanced deliverable lookup with score fallback
   const userSpecificDeliverable = useMemo(() => {
-    const baseDeliverable = allUserDeliverables[index] || {};
-    const arrayElement = allUserDeliverables[index];
-    
+    const base = allUserDeliverables[index] || {};
     return {
-      ...baseDeliverable,
-      assigneeScore: arrayElement?.assigneeScore || baseDeliverable?.assigneeScore,
-      creatorScore: arrayElement?.creatorScore || baseDeliverable?.creatorScore
+      ...base,
+      assigneeScore: allUserDeliverables[index]?.assigneeScore ?? base?.assigneeScore,
+      creatorScore: allUserDeliverables[index]?.creatorScore ?? base?.creatorScore,
     };
   }, [allUserDeliverables, index]);
 
-  // Debug logs
-  // useEffect(() => {
-  //   console.group('[DeliverableReview] Data Debug');
-  //   console.log('Complete deliverables array:', allUserDeliverables);
-  //   console.log('Enhanced deliverable:', userSpecificDeliverable);
-  //   console.groupEnd();
-  // }, [allUserDeliverables, userSpecificDeliverable]);
+  // Recurrence flags and occurrences with stable reference
+  const isRecurring = useMemo(() => {
+    const occ = userSpecificDeliverable?.occurrences;
+    return Array.isArray(occ) && occ.length > 0;
+  }, [userSpecificDeliverable]);
 
-  // Handle both recurring and non-recurring deliverables
-  const isRecurring = Array.isArray(userSpecificDeliverable?.occurrences) && 
-                     userSpecificDeliverable.occurrences.length > 0;
+  const occurrences = useMemo(() => {
+    return isRecurring ? userSpecificDeliverable.occurrences : EMPTY_ARR;
+  }, [isRecurring, userSpecificDeliverable]);
 
-  const occurrences = isRecurring ? userSpecificDeliverable.occurrences : [];
-
-  // Auto-label logic for recurring
+  // Auto-label when recurring
   const autoLabel = useMemo(() => {
     if (!isRecurring || !userSpecificDeliverable) return null;
     return autoLabelFrom(occurrences, userSpecificDeliverable.recurrencePattern);
   }, [isRecurring, userSpecificDeliverable, occurrences]);
 
-  // Handle occurrence selection
+  // Default selection
   useEffect(() => {
     if (isRecurring && !selectedOccurrenceLabel && autoLabel) {
       onSelectOccurrence?.(autoLabel);
     }
   }, [isRecurring, autoLabel, selectedOccurrenceLabel, onSelectOccurrence]);
 
-  // Get current occurrence if recurring
+  // Current occurrence
   const currentOccurrence = useMemo(() => {
     if (!isRecurring || !selectedOccurrenceLabel) return null;
-    return occurrences.find(o => o?.periodLabel === selectedOccurrenceLabel) || null;
+    return occurrences.find((o) => o?.periodLabel === selectedOccurrenceLabel) || null;
   }, [isRecurring, occurrences, selectedOccurrenceLabel]);
 
-  // Get scores
+  // Scores
   const assigneeScore = isRecurring
     ? currentOccurrence?.assigneeScore || userSpecificDeliverable?.assigneeScore
     : userSpecificDeliverable?.assigneeScore;
@@ -109,26 +115,26 @@ export const useDeliverableReview = ({
     ? currentOccurrence?.creatorScore || userSpecificDeliverable?.creatorScore
     : userSpecificDeliverable?.creatorScore;
 
-  // Get evidence
+  // Evidence
   const assigneeEvidence = isRecurring
-    ? currentOccurrence?.assigneeScore?.supportingDocuments || 
-      userSpecificDeliverable?.assigneeScore?.supportingDocuments || 
-      []
-    : userSpecificDeliverable?.assigneeScore?.supportingDocuments || [];
+    ? currentOccurrence?.assigneeScore?.supportingDocuments ||
+      userSpecificDeliverable?.assigneeScore?.supportingDocuments ||
+      EMPTY_ARR
+    : userSpecificDeliverable?.assigneeScore?.supportingDocuments || EMPTY_ARR;
 
   const creatorEvidence = isRecurring
-    ? currentOccurrence?.creatorScore?.supportingDocuments || 
-      userSpecificDeliverable?.creatorScore?.supportingDocuments || 
-      []
-    : userSpecificDeliverable?.creatorScore?.supportingDocuments || [];
+    ? currentOccurrence?.creatorScore?.supportingDocuments ||
+      userSpecificDeliverable?.creatorScore?.supportingDocuments ||
+      EMPTY_ARR
+    : userSpecificDeliverable?.creatorScore?.supportingDocuments || EMPTY_ARR;
 
-  // Status flags
+  // Flags
   const assigneeHasScore = hasNumber(assigneeScore?.value);
-  const reviewedByCreator = hasNumber(creatorScore?.value) || 
-                          Boolean(userSpecificDeliverable?.hasSavedCreator);
+  const reviewedByCreator =
+    hasNumber(creatorScore?.value) || Boolean(userSpecificDeliverable?.hasSavedCreator);
   const hasTargetOccurrence = !isRecurring || !!selectedOccurrenceLabel;
 
-  // Save function
+  // Save
   const saveCreatorReview = async ({ value, notes, files }) => {
     const numeric = Number(value);
 
@@ -142,31 +148,33 @@ export const useDeliverableReview = ({
       deliverableId: userSpecificDeliverable?.deliverableId,
       occurrenceLabel: isRecurring ? selectedOccurrenceLabel : null,
       scoreType: "creatorScore",
-      updates: { 
-        creatorScore: { 
-          value: numeric, 
+      updates: {
+        creatorScore: {
+          value: numeric,
           notes,
-          supportingDocuments: creatorScore?.supportingDocuments || [] 
-        } 
+          supportingDocuments: creatorScore?.supportingDocuments || EMPTY_ARR,
+        },
       },
-      files: files || [],
-      onScoreChange
+      files: files || EMPTY_ARR,
+      onScoreChange,
     });
 
     if (assigneeId) await dispatch(fetchUserKpis(assigneeId));
   };
 
-  // Return minimal deliverable shape for UI compatibility
-  const deliverable = userSpecificDeliverable 
-    ? { 
+  // Minimal shape for UI compatibility
+  const deliverable = userSpecificDeliverable
+    ? {
         _id: userSpecificDeliverable.deliverableId,
         isRecurring,
-        occurrences,
+        occurrences, // already stable
         status: userSpecificDeliverable.status,
-        ...(!isRecurring ? {
-          assigneeScore,
-          creatorScore
-        } : {})
+        ...(!isRecurring
+          ? {
+              assigneeScore,
+              creatorScore,
+            }
+          : {}),
       }
     : null;
 
@@ -181,6 +189,6 @@ export const useDeliverableReview = ({
     creatorScore,
     creatorEvidence,
     hasTargetOccurrence,
-    saveCreatorReview
+    saveCreatorReview,
   };
 };

@@ -13,7 +13,6 @@ export const handleSaveDeliverable = async ({
    deliverableId,
    occurrenceLabel,
    files = [],
-   onScoreChange,
 }) => {
    if (!assigneeId) throw new Error("handleSaveDeliverable: 'assigneeId' is required.");
    if (!deliverableId) throw new Error("handleSaveDeliverable: 'deliverableId' is required.");
@@ -59,5 +58,4 @@ export const handleSaveDeliverable = async ({
      result = await dispatch(editKpiDeliverables(kpiId, basePayload));
    }
 
-   // ... (existing logic after dispatch, e.g., onScoreChange, fetchUserKpis)
 };

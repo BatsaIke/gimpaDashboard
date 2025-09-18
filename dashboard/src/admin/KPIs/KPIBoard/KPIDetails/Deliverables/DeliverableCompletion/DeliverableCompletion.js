@@ -37,6 +37,9 @@ function getAutoOccurrenceLabel(deliverable, occurrences) {
   }
 }
 
+// A frozen, shared empty array to avoid accidental mutation and keep a stable ref
+const EMPTY_OCCURRENCES = Object.freeze([]);
+
 const DeliverableCompletion = ({
   kpiId,
   index,
@@ -63,7 +66,13 @@ const DeliverableCompletion = ({
   );
 
   const isRecurring = !!deliverable?.isRecurring;
-  const occurrences = Array.isArray(deliverable?.occurrences) ? deliverable.occurrences : [];
+
+  // ✅ Memoize occurrences so the reference is stable unless `deliverable` changes
+  const occurrences = useMemo(() => {
+    return Array.isArray(deliverable?.occurrences)
+      ? deliverable.occurrences
+      : EMPTY_OCCURRENCES;
+  }, [deliverable]);
 
   const autoLabel = useMemo(() => {
     if (!isRecurring || !deliverable) return null;
@@ -116,7 +125,6 @@ const DeliverableCompletion = ({
     };
   }, [isRecurring, targetOccurrence, deliverable]);
 
-  // Single return; render loading branch via JSX conditionals
   return (
     <div className={styles.completionCard}>
       {!deliverable ? (

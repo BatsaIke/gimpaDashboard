@@ -1,7 +1,7 @@
 // src/components/KPIBoard/KPIModal/CreateKpiModal.js
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { FaPlus, FaTimes, FaSave, FaUserTie, FaUsers, FaTasks } from "react-icons/fa";
+import {  FaTimes, FaSave, FaUserTie, FaUsers, FaTasks } from "react-icons/fa";
 
 // Redux actions
 import { fetchDepartments } from "../../../../actions/departmentsActions";

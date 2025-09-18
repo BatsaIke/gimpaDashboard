@@ -4,6 +4,8 @@ import { FaSearch, FaChevronDown, FaChevronUp, FaUser, FaUserTie } from 'react-i
 import styles from './UserAndRoleSelection.module.css';
 import { fetchRoles } from '../../../actions/authAction';
 
+const EMPTY_ARR = Object.freeze([]);
+
 const UserAndRoleSelection = ({ newKpi, setNewKpi, employees }) => {
   const dispatch = useDispatch();
   const [userSearch, setUserSearch] = useState('');
@@ -12,9 +14,14 @@ const UserAndRoleSelection = ({ newKpi, setNewKpi, employees }) => {
 
   // Get roles from Redux store
   const rolesState = useSelector((state) => state.roles);
-  const roles = Array.isArray(rolesState?.roles?.data) ? rolesState.roles.data : [];
   const rolesLoading = rolesState?.loading || false;
   const rolesError = rolesState?.error || null;
+
+  // ✅ Memoize roles so its reference is stable
+  const roles = useMemo(() => {
+    const raw = rolesState?.roles?.data;
+    return Array.isArray(raw) ? raw : EMPTY_ARR;
+  }, [rolesState]);
 
   // Fetch roles when component mounts
   useEffect(() => {
@@ -28,8 +35,8 @@ const UserAndRoleSelection = ({ newKpi, setNewKpi, employees }) => {
   const filteredEmployees = useMemo(() => {
     const searchTerm = safeString(userSearch);
     return employees
-      .filter(emp => emp.role !== 'Super Admin')
-      .filter(emp => {
+      .filter((emp) => emp.role !== 'Super Admin')
+      .filter((emp) => {
         const name = safeString(emp.username || emp.fullName || emp.email);
         const role = safeString(emp.role);
         return name.includes(searchTerm) || role.includes(searchTerm);
@@ -39,31 +46,34 @@ const UserAndRoleSelection = ({ newKpi, setNewKpi, employees }) => {
   // Filter roles based on search
   const filteredRoles = useMemo(() => {
     const searchTerm = safeString(roleSearch);
-    return roles.filter(role => safeString(role).includes(searchTerm));
+    // Handle either string roles or objects with a 'name' field
+    return roles
+      .map((r) => (typeof r === 'string' ? r : r?.name ?? ''))
+      .filter((r) => safeString(r).includes(searchTerm));
   }, [roles, roleSearch]);
 
   const handleUserCheckboxChange = (e) => {
     const userId = e.target.value;
-    setNewKpi(prev => ({
+    setNewKpi((prev) => ({
       ...prev,
       assignedUsers: e.target.checked
         ? [...prev.assignedUsers, userId]
-        : prev.assignedUsers.filter(id => id !== userId),
+        : prev.assignedUsers.filter((id) => id !== userId),
     }));
   };
 
   const handleRoleCheckboxChange = (e) => {
     const role = e.target.value;
-    setNewKpi(prev => ({
+    setNewKpi((prev) => ({
       ...prev,
       assignedRoles: e.target.checked
         ? [...prev.assignedRoles, role]
-        : prev.assignedRoles.filter(r => r !== role),
+        : prev.assignedRoles.filter((r) => r !== role),
     }));
   };
 
   const toggleSection = (section) => {
-    setExpandedSection(prev => ({ ...prev, [section]: !prev[section] }));
+    setExpandedSection((prev) => ({ ...prev, [section]: !prev[section] }));
   };
 
   // Get display name for employee (username > fullName > email > 'Unknown User')
@@ -94,7 +104,7 @@ const UserAndRoleSelection = ({ newKpi, setNewKpi, employees }) => {
             </div>
             <div className={styles.scrollContainer}>
               {filteredEmployees.length > 0 ? (
-                filteredEmployees.map(emp => (
+                filteredEmployees.map((emp) => (
                   <div key={emp._id} className={styles.checkboxItem}>
                     <input
                       type="checkbox"
@@ -143,20 +153,20 @@ const UserAndRoleSelection = ({ newKpi, setNewKpi, employees }) => {
               {rolesLoading ? (
                 <div className={styles.loading}>Loading roles...</div>
               ) : rolesError ? (
-                <div className={styles.error}>Error loading roles: {rolesError}</div>
+                <div className={styles.error}>Error loading roles: {String(rolesError)}</div>
               ) : filteredRoles.length > 0 ? (
-                filteredRoles.map((role, index) => (
+                filteredRoles.map((roleName, index) => (
                   <div key={index} className={styles.checkboxItem}>
                     <input
                       type="checkbox"
                       id={`role-${index}`}
-                      value={role}
-                      checked={newKpi.assignedRoles.includes(role)}
+                      value={roleName}
+                      checked={newKpi.assignedRoles.includes(roleName)}
                       onChange={handleRoleCheckboxChange}
                       className={styles.checkbox}
                     />
                     <label htmlFor={`role-${index}`} className={styles.label}>
-                      {role}
+                      {roleName}
                     </label>
                   </div>
                 ))

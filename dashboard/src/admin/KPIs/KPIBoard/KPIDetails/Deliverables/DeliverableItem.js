@@ -1,5 +1,5 @@
 // src/components/KPIBoard/KPIDetails/Deliverables/DeliverableItem.jsx
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import DeliverableContent from "./DeliverableContent";
 import resolveDeliverable from "../../../../../utils/deliverableUtils";

@@ -23,7 +23,6 @@ import {
 import UserKpiBoard from "./admin/KPIs/KPIBoard/UserKpiBoard/UserKpiBoard";
 import { fetchMyProfile, logout } from "./actions/authAction";
 import DiscrepanciesPage from "./admin/Descrepancy/DiscrepanciesPage";
-import NetworkModal from "./UI/modal/NetworkModal";
 import ContactPage from "./pages/Contact/Contactpage";
 import NotFound from "./components/notFound/NotFound";
 import InstructionsPage from "./pages/Instructions/InstructionsPage";
@@ -33,7 +32,6 @@ import ProfilePage from "./pages/Profile/ProfilePage";
 function App() {
   const dispatch = useDispatch();
   const location = useLocation();
-  const { token } = useSelector((state) => state.auth);
 
   useEffect(() => {
     // Create an async function inside the effect
