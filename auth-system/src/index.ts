@@ -1,4 +1,3 @@
-// src/index.ts
 import express from "express";
 import dotenv from "dotenv";
 import path from "path";
@@ -60,12 +59,13 @@ app.get(
     res.send("API is running");
   }
 );
+
 // ---------- Serve React client if present ----------
 /**
- * NOTE at runtime __dirname === <project-root>/dist
- * so ../client/build resolves to <project-root>/client/build
+ * UPDATED: Using process.cwd() is more reliable on Vercel than __dirname
+ * as it consistently points to the project's root directory at runtime.
  */
-const clientBuildPath = path.resolve(__dirname, "../dashboard/build");
+const clientBuildPath = path.join(process.cwd(), "dashboard/build");
 const indexHtml = path.join(clientBuildPath, "index.html");
 
 if (fs.existsSync(indexHtml)) {
