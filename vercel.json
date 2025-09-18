@@ -8,9 +8,12 @@
   ],
   "routes": [
     {
-      "src": "/(.*)",
+      "src": "/api/v1/(.*)",
       "dest": "auth-system/src/index.ts"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/dashboard/build/$1"
     }
   ]
 }
-
