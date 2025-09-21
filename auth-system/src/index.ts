@@ -4,11 +4,12 @@ import path from "path";
 import fs from "fs";
 import cookieParser from "cookie-parser";
 import type { Request, Response, NextFunction } from "express";
+import cors from 'cors'
 
 import passport from "./utils/passportConfig";
 import connectDB from "./config/db";
 import sessionConfig from "./config/sessionConfig";
-import corsConfig from "./middleware/corsConfig";
+// import corsConfig from "./middleware/corsConfig";
 import loggingMiddleware from "./middleware/logging";
 import errorHandler from "./middleware/errorHandler";
 
@@ -32,7 +33,7 @@ const isProduction = process.env.NODE_ENV === "production";
 // ---------- Core middleware ----------
 app.use(express.json());
 app.use(cookieParser());
-app.use(corsConfig)
+app.use(cors());
 app.use(loggingMiddleware(isProduction));
 app.use(sessionConfig(isProduction));
 
