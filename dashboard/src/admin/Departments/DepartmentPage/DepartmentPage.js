@@ -1,39 +1,27 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  fetchDepartments,
-  fetchMyDepartments,
-  createDepartment,
-  editDepartment,
-  removeDepartment,
-} from "../../../actions/departmentsActions";
+import { fetchDepartments, fetchMyDepartments, createDepartment, editDepartment, removeDepartment } from "../../../actions/departmentsActions";
+import { fetchAllRoles, createDeptRole } from "../../../actions/departmentRolesActions";
 import { set_Alert } from "../../../actions/alertAction";
 import styles from "./DepartmentPage.module.css";
 
-import { createDeptRole } from "../../../actions/departmentRolesActions";
-import RolesTab from "../Roles/RolesTab";
-
-// NEW splits
-import DepartmentTabsHeader from "./DepartmentTabsHeader";
-import DepartmentsPane from "./DepartmentsPane";
-import DeptRoleModalPortal from "./DeptRoleModalPortal";
-
-const TOP_ROLES = new Set([
-  "Super Admin",
-  "Rector",
-  "Deputy Rector",
-  "Secretary of the Institute",
-]);
+import DepartmentToolbar from "./DepartmentToolbar";
+import DepartmentContent from "./DepartmentContent";
+import AddDeptRoleModal from "../Roles/AddDeptRoleModal";
+import * as Utils from './departmentPageUtils';
 
 const DepartmentPage = () => {
   const dispatch = useDispatch();
   const authUser = useSelector((s) => s.auth?.user);
-  const isTop = TOP_ROLES.has(authUser?.role);
 
   const deptState = useSelector((state) => state.departments) || {};
-  const items = Array.isArray(deptState.items) ? deptState.items : [];
   const loading = !!deptState.loading;
   const error = deptState.error || null;
+  const items = useMemo(() => Array.isArray(deptState.items) ? deptState.items : [], [deptState.items]);
+
+  const rolesState = useSelector((state) => state.departmentRoles) || {};
+  const allRoles = Array.isArray(rolesState.allRoles) ? rolesState.allRoles : [];
+  const rolesLoading = !!rolesState.allRolesLoading;
 
   const [isAddOpen, setAddOpen] = useState(false);
   const [isEditOpen, setEditOpen] = useState(false);
@@ -45,102 +33,37 @@ const DepartmentPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterCategory, setFilterCategory] = useState("All");
 
-  // Add Role modal state
   const [roleModalOpen, setRoleModalOpen] = useState(false);
   const [roleDeptId, setRoleDeptId] = useState("");
   const [roleName, setRoleName] = useState("");
   const [roleDesc, setRoleDesc] = useState("");
 
-  const [activeTab, setActiveTab] = useState("departments"); // 'departments' | 'roles'
+  const isTopUser = useMemo(() => Utils.getScopedItems(items, authUser).length > 0 && authUser?.role?.includes("Admin"), [items, authUser]);
 
   useEffect(() => {
-    (async () => {
-      if (isTop) await dispatch(fetchDepartments());
-      else await dispatch(fetchMyDepartments());
-    })();
-  }, [dispatch, isTop]);
-
-  const scopedItems = useMemo(() => {
-    if (isTop) return items.filter((d) => !d.parent);
-
-    const uid = String(authUser?._id || "");
-    const memberIds = Array.isArray(authUser?.department)
-      ? authUser.department.map((d) =>
-          String(typeof d === "object" ? d._id : d)
-        )
-      : authUser?.department
-      ? [
-          String(
-            typeof authUser.department === "object"
-              ? authUser.department._id
-              : authUser.department
-          ),
-        ]
-      : [];
-
-    const supervisedIds = new Set(
-      items
-        .filter(
-          (d) =>
-            String(d.head) === uid ||
-            (Array.isArray(d.supervisors) &&
-              d.supervisors.map(String).includes(uid))
-        )
-        .map((d) => String(d._id))
-    );
-
-    const base = new Set([...memberIds, ...supervisedIds]);
-
-    return items.filter((d) => {
-      const idStr = String(d._id);
-      if (base.has(idStr)) return true;
-      const anc = Array.isArray(d.ancestors) ? d.ancestors.map(String) : [];
-      return anc.some((a) => base.has(a));
-    });
-  }, [items, authUser, isTop]);
-
-  const filteredItems = useMemo(() => {
-    const q = searchTerm.toLowerCase();
-    return scopedItems.filter((dept) => {
-      const matchesSearch =
-        dept.name.toLowerCase().includes(q) ||
-        (dept.description && dept.description.toLowerCase().includes(q));
-      const matchesCategory =
-        filterCategory === "All" || dept.category === filterCategory;
-      return matchesSearch && matchesCategory;
-    });
-  }, [scopedItems, searchTerm, filterCategory]);
-
-  const categories = useMemo(() => {
-    const uniqueCats = [
-      ...new Set(scopedItems.map((i) => i.category || "Uncategorized")),
-    ];
-    return ["All", ...uniqueCats];
-  }, [scopedItems]);
-
-  const allowedParents = useMemo(
-    () => (isTop ? items : scopedItems),
-    [isTop, items, scopedItems]
-  );
-
-  const roleDeptOptions = useMemo(
-    () => (isTop ? items : scopedItems),
-    [isTop, items, scopedItems]
-  );
-
-  const canEdit = (dept) =>
-    isTop ||
-    String(dept.head) === String(authUser?._id) ||
-    (Array.isArray(dept.supervisors) &&
-      dept.supervisors.map(String).includes(String(authUser?._id)));
-
-  const canDelete = () => authUser?.role === "Super Admin";
+    const fetchData = async () => {
+      if (isTopUser) {
+        await dispatch(fetchDepartments());
+      } else {
+        await dispatch(fetchMyDepartments());
+      }
+      await dispatch(fetchAllRoles());
+    };
+    fetchData();
+  }, [dispatch, isTopUser]);
+  
+  const scopedItems = useMemo(() => Utils.getScopedItems(items, authUser), [items, authUser]);
+  const filteredItems = useMemo(() => Utils.getFilteredItems(scopedItems, searchTerm, filterCategory), [scopedItems, searchTerm, filterCategory]);
+  const filteredRoles = useMemo(() => Utils.getFilteredRoles(allRoles, searchTerm), [allRoles, searchTerm]);
+  const categories = useMemo(() => Utils.getCategories(scopedItems), [scopedItems]);
+  const allowedParents = useMemo(() => Utils.getAllowedParents(items, scopedItems, authUser), [items, scopedItems, authUser]);
+  const roleDeptOptions = allowedParents;
 
   const openAdd = () => {
     setName("");
     setDescription("");
     setCategory("Unit");
-    setParentId(isTop ? null : allowedParents[0]?._id || null);
+    setParentId(isTopUser ? null : allowedParents[0]?._id || null);
     setAddOpen(true);
   };
 
@@ -153,11 +76,12 @@ const DepartmentPage = () => {
   };
 
   const doAdd = async () => {
-    if (!name.trim())
+    if (!name.trim()) {
       return dispatch(set_Alert("Name cannot be empty", "error"));
-    if (!isTop && !parentId)
+    }
+    if (!isTopUser && !parentId) {
       return dispatch(set_Alert("Select a parent department", "error"));
-
+    }
     const payload = {
       name,
       description,
@@ -188,103 +112,73 @@ const DepartmentPage = () => {
   };
 
   const doDelete = async (id) => {
-    if (!window.confirm("Delete this department?")) return;
+    if (!window.confirm("Delete this department? This action cannot be undone.")) return;
     const res = await dispatch(removeDepartment(id));
-    if (res?.success) dispatch(set_Alert("Department deleted", "success"));
-    else dispatch(set_Alert(res?.message || "Delete failed", "error"));
+    if (res?.success) {
+      dispatch(set_Alert("Department deleted", "success"));
+    } else {
+      dispatch(set_Alert(res?.message || "Delete failed", "error"));
+    }
   };
 
-  const openAddRole = (deptId) => {
-    setRoleDeptId(deptId || roleDeptOptions[0]?._id || "");
+  const openAddRole = () => {
+    setRoleDeptId(roleDeptOptions[0]?._id || "");
     setRoleName("");
     setRoleDesc("");
     setRoleModalOpen(true);
   };
 
   const saveRole = async () => {
-    if (!roleDeptId) {
-      dispatch(set_Alert("Select a department", "error"));
-      return;
-    }
-    if (!roleName.trim()) {
-      dispatch(set_Alert("Enter a role name", "error"));
-      return;
-    }
+    if (!roleDeptId) return dispatch(set_Alert("You must select a department", "error"));
+    if (!roleName.trim()) return dispatch(set_Alert("Role name cannot be empty", "error"));
 
-    const res = await dispatch(
-      createDeptRole(roleDeptId, {
-        name: roleName.trim(),
-        description: roleDesc?.trim() || undefined,
-      })
-    );
-
+    const res = await dispatch(createDeptRole(roleDeptId, { name: roleName, description: roleDesc }));
     if (res?.success) {
-      dispatch(set_Alert("Role created", "success"));
+      dispatch(set_Alert("Role created successfully", "success"));
       setRoleModalOpen(false);
-      setRoleName("");
-      setRoleDesc("");
-      setRoleDeptId("");
     } else {
-      dispatch(set_Alert("Failed to create role", "error"));
+      dispatch(set_Alert(res?.message || "Failed to create role", "error"));
     }
   };
+  
+  const handleCanEdit = (dept) => Utils.canEdit(dept, authUser);
+  const handleCanDelete = () => Utils.canDelete(authUser);
 
   return (
     <div className={styles.container}>
-      <DepartmentTabsHeader activeTab={activeTab} setActiveTab={setActiveTab} />
-
-      {activeTab === "departments" ? (
-        <DepartmentsPane
-          isTop={isTop}
-          scopedCount={scopedItems.length}
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          categories={categories}
-          filterCategory={filterCategory}
-          setFilterCategory={setFilterCategory}
-          openAdd={openAdd}
-          openAddRole={openAddRole}
-          loading={loading}
-          error={error}
-          filteredItems={filteredItems}
-          canEdit={canEdit}
-          canDelete={canDelete}
-          openEdit={openEdit}
-          doDelete={doDelete}
-          isAddOpen={isAddOpen}
-          setAddOpen={setAddOpen}
-          name={name}
-          setName={setName}
-          description={description}
-          setDescription={setDescription}
-          category={category}
-          setCategory={setCategory}
-          doAdd={doAdd}
-          parentId={parentId}
-          setParentId={setParentId}
-          allowedParents={allowedParents}
-          isEditOpen={isEditOpen}
-          setEditOpen={setEditOpen}
-          doEdit={doEdit}
-        />
-      ) : (
-        <RolesTab
-          departments={roleDeptOptions}
-          onAddRoleClick={(deptId) => openAddRole(deptId)}
-        />
-      )}
-
-      <DeptRoleModalPortal
-        roleModalOpen={roleModalOpen}
-        closeRoleModal={() => setRoleModalOpen(false)}
-        roleDeptOptions={roleDeptOptions}
-        roleDeptId={roleDeptId}
-        setRoleDeptId={setRoleDeptId}
+      <DepartmentToolbar
+        count={scopedItems.length}
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        categories={categories}
+        filterCategory={filterCategory}
+        setFilterCategory={setFilterCategory}
+        onAddClick={openAdd}
+        onAddRoleClick={openAddRole}
+      />
+      <DepartmentContent
+        loading={loading || rolesLoading}
+        error={error}
+        filteredItems={filteredItems}
+        filteredRoles={filteredRoles}
+        canEdit={handleCanEdit}
+        canDelete={handleCanDelete}
+        onEdit={(d) => (handleCanEdit(d) ? openEdit(d) : null)}
+        onDelete={(id) => (handleCanDelete() ? doDelete(id) : null)}
+        isTop={isTopUser}
+        {...{ isAddOpen, setAddOpen, name, setName, description, setDescription, category, setCategory, onAddSave: doAdd, parentId, setParentId, allowedParents, isEditOpen, setEditOpen, onEditSave: doEdit }}
+      />
+      <AddDeptRoleModal
+        isOpen={roleModalOpen}
+        onClose={() => setRoleModalOpen(false)}
+        departments={roleDeptOptions}
+        departmentId={roleDeptId}
+        setDepartmentId={setRoleDeptId}
         roleName={roleName}
         setRoleName={setRoleName}
         roleDesc={roleDesc}
         setRoleDesc={setRoleDesc}
-        saveRole={saveRole}
+        onSave={saveRole}
       />
     </div>
   );

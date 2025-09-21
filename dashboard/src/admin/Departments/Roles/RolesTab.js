@@ -8,28 +8,25 @@ const RolesTab = ({ departments = [], onAddRoleClick, initialDeptId }) => {
   const dispatch = useDispatch();
   const [deptId, setDeptId] = useState(initialDeptId || departments[0]?._id || "");
 
-  // Keep deptId in sync with initialDeptId if parent changes it (e.g., after creating a role)
   useEffect(() => {
     if (initialDeptId && initialDeptId !== deptId) {
       setDeptId(initialDeptId);
-      console.log("[RolesTab] applied initialDeptId:", initialDeptId);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialDeptId]);
+  }, [initialDeptId, deptId]);
 
-  // When departments load later, pick the first if none chosen yet
   useEffect(() => {
     if (!deptId && departments?.length && departments[0]?._id) {
       setDeptId(departments[0]._id);
-      console.log("[RolesTab] defaulted deptId to first dept:", departments[0]._id);
     }
   }, [departments, deptId]);
 
-  // Read slice (use the actual shape rolesByDept)
   const rolesState = useSelector((s) => s.departmentRoles || {});
-  const perDept =
-    rolesState?.rolesByDept?.[deptId] ||
-    {}; // no legacy shapes needed now that slice is clear
+
+  // FIX 1: Wrap 'perDept' in useMemo to stabilize its reference
+  const perDept = useMemo(() =>
+    rolesState?.rolesByDept?.[deptId] || {},
+    [rolesState?.rolesByDept, deptId]
+  );
 
   const loading = !!(perDept.loading || rolesState.loading);
   const error = perDept.error || rolesState.error || null;
@@ -44,15 +41,13 @@ const RolesTab = ({ departments = [], onAddRoleClick, initialDeptId }) => {
       console.log("[RolesTab] skip fetch, deptId empty");
       return;
     }
-    const res = await dispatch(fetchDeptRoles(deptId));
+    // FIX 2: Removed the unused 'res' variable
+    await dispatch(fetchDeptRoles(deptId));
   }, [dispatch, deptId]);
 
   useEffect(() => {
-    // fetch whenever dept changes (and after initial defaulting)
     doFetch();
   }, [doFetch]);
-
-  
 
   return (
     <div className={styles.rolesTabWrap}>

@@ -20,8 +20,7 @@ const DepartmentList = ({
     <>
       <div className={styles.grid}>
         {departments.map((dept) => {
-          const allowEdit = canEdit(dept);
-          const allowDelete = canDelete(dept);
+        
           const uname = dept?.name || "Department";
           const initial = String(uname).charAt(0).toUpperCase();
 
