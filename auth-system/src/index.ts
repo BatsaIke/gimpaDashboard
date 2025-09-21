@@ -32,7 +32,7 @@ const isProduction = process.env.NODE_ENV === "production";
 // ---------- Core middleware ----------
 app.use(express.json());
 app.use(cookieParser());
-app.use(corsConfig(isProduction));
+app.use(corsConfig);
 app.use(loggingMiddleware(isProduction));
 app.use(sessionConfig(isProduction));
 
