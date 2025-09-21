@@ -1,0 +1,66 @@
+.rolesTabWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.controls {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.filterBox {
+  flex: 1;
+  min-width: 220px;
+}
+
+.filterSelect {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid #2a3b4d;
+  background: #0f1a26;
+  color: #fff;
+}
+
+.buttonRow {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.addButton {
+  padding: 0.5rem 1rem;
+  background: #1f3a52;
+  border: 1px solid #2a3b4d;
+  color: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.addButton:hover {
+  background: #28506f;
+}
+
+.addRoleButton {
+  padding: 0.5rem 1rem;
+  background: #215842;
+  border: 1px solid #2d6b53;
+  color: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.addRoleButton:hover {
+  background: #2b765a;
+}
+
+.errorBox {
+  background: rgba(128, 0, 0, 0.15);
+  border: 1px solid #aa4444;
+  padding: 0.75rem;
+  border-radius: 6px;
+  color: #ff9c9c;
+}

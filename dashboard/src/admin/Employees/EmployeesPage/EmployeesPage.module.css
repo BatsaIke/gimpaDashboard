@@ -3,7 +3,8 @@
     min-height: 100vh;
     background: linear-gradient(135deg, #002F5F 0%, #2CA85C 100%);
     color: #fff;
-    padding-left: 250px; /* Sidebar width */
+    padding-left: 250px; 
+    width: 100%;
     padding-top: 60px; /* Header height */
   }
   

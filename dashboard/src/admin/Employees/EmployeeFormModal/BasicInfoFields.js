@@ -1,4 +1,5 @@
-import React from "react";
+// BasicInfoFields.jsx
+import React, { useMemo } from "react";
 import styles from "./EmployeeFormFields.module.css";
 
 const rankOptions = [
@@ -10,7 +11,25 @@ const rankOptions = [
   "Other",
 ];
 
+// ✅ FIX: if role objects arrive as {_id, name}, use NAME as value (not _id)
+const toOptions = (roles) => {
+  const arr = Array.isArray(roles) ? roles : [];
+  return arr
+    .map((r) => {
+      if (typeof r === "string") return { label: r, value: r };
+      if (r && typeof r === "object") {
+        if ("label" in r && "value" in r) return { label: r.label, value: String(r.value) };
+        if ("_id" in r && "name" in r) return { label: r.name, value: r.name }; // ← here
+      }
+      return null;
+    })
+    .filter(Boolean);
+};
+
 const BasicInfoFields = ({ formData, loading, roles, editMode, set }) => {
+  const roleOptions = useMemo(() => toOptions(roles), [roles]);
+  const roleValue = String(formData.role || "");
+
   return (
     <>
       <div className={styles.formGroup}>
@@ -87,19 +106,22 @@ const BasicInfoFields = ({ formData, loading, roles, editMode, set }) => {
         <label className={styles.label}>Role</label>
         <select
           name="role"
-          value={formData.role}
+          value={roleValue}
           onChange={set("role")}
-          disabled={loading || !roles.length}
+          disabled={loading || roleOptions.length === 0}
           className={styles.selectField}
         >
-          {!roles.length ? (
+          {roleOptions.length === 0 ? (
             <option>Loading roles...</option>
           ) : (
-            roles.map((role) => (
-              <option key={role} value={role}>
-                {role}
-              </option>
-            ))
+            <>
+              <option value="">-- Select Role --</option>
+              {roleOptions.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
+            </>
           )}
         </select>
       </div>

@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import styles from "./EmployeeCard.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEnvelope, faPhone, faBuilding, faEye, faEdit, faTrash, faKey } from "@fortawesome/free-solid-svg-icons";
+import { faEnvelope, faPhone, faBuilding, faEye,  } from "@fortawesome/free-solid-svg-icons";
 
-const EmployeeCard = ({ employee, onEdit, onDelete, onResetPassword, onView }) => {
+const EmployeeCard = ({ employee, onView }) => {
   const [isHovered, setIsHovered] = useState(false);
   const uname = employee.fullName || employee.username || employee.email || "User";
   const initial = String(uname).charAt(0).toUpperCase();
@@ -73,45 +73,7 @@ const EmployeeCard = ({ employee, onEdit, onDelete, onResetPassword, onView }) =
         </div>
       </motion.div>
 
-      {/* Footer Section */}
-      <motion.div 
-        className={styles.cardFooter}
-        onClick={(e) => e.stopPropagation()}
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.2 }}
-      >
-        <motion.button 
-          className={styles.actionButton}
-          onClick={() => onEdit(employee)}
-          whileHover={{ scale: 1.05, boxShadow: "0 4px 15px rgba(59, 130, 246, 0.4)" }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <FontAwesomeIcon icon={faEdit} />
-          <span>Edit</span>
-        </motion.button>
-        
-        <motion.button 
-          className={styles.actionButtonDanger}
-          onClick={() => onDelete(employee._id)}
-          whileHover={{ scale: 1.05, boxShadow: "0 4px 15px rgba(239, 68, 68, 0.4)" }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <FontAwesomeIcon icon={faTrash} />
-          <span>Delete</span>
-        </motion.button>
-        
-        <motion.button 
-          className={styles.actionButtonSecondary}
-          onClick={() => onResetPassword(employee._id)}
-          whileHover={{ scale: 1.05, boxShadow: "0 4px 15px rgba(34, 197, 94, 0.4)" }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <FontAwesomeIcon icon={faKey} />
-          <span>Reset PW</span>
-        </motion.button>
-      </motion.div>
-
+     
       {/* Hover Glow Effect */}
       <motion.div 
         className={styles.glowEffect}

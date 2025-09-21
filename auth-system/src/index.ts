@@ -14,12 +14,13 @@ import errorHandler from "./middleware/errorHandler";
 
 import routes from "./routes";
 import departmentRoutes from "./routes/departmentRoutes";
-import employeesRoutes from "./routes/employeesRoutes";
 import kpiRoutes from "./routes/kpiRoutes";
 import kpiHeaderRoutes from "./routes/kpiHeadersRoutes";
 import roleRoutes from "./routes/roleRoutes";
 import discrepancyRoutes from "./routes/discrepancyRoutes";
 import healthRoutes from "./routes/healthroutes";
+import departmentRoleRoutes from './routes/departmentRoleRoutes'
+
 
 dotenv.config();
 
@@ -43,9 +44,10 @@ app.use(passport.session());
 app.use("/uploads", express.static("uploads"));
 
 // ---------- API routes ----------
+
 app.use("/api/v1/", routes);
+app.use("/api/v1", departmentRoleRoutes);
 app.use("/api/v1", departmentRoutes);
-app.use("/api/v1", employeesRoutes);
 app.use("/api/v1/kpis", kpiRoutes);
 app.use("/api/v1/roles", roleRoutes);
 app.use("/api/v1/kpi-headers", kpiHeaderRoutes);
@@ -85,6 +87,8 @@ if (fs.existsSync(indexHtml)) {
       res.status(404).send("Frontend not found. Did you run the build script?");
   });
 }
+
+
 
 
 // ---------- Error handler (after routes) ----------

@@ -2,7 +2,7 @@ import cors from 'cors';
 
 const corsConfig = (isProduction: boolean) =>
   cors({
-    origin: isProduction ? 'https://your-production-url.com' : 'http://localhost:3000',
+    origin: isProduction ? 'gimpa-dashboard-6vdcnbce7-batsaikes-projects.vercel.app/api/v1' : 'http://localhost:3000',
     credentials: true,
   });
 

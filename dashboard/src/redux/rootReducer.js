@@ -11,6 +11,8 @@ import kpiReducer from './slices/kpiSlice'
 import kpiHeadersReducer from './slices/kpiHeaderSlice'; 
 import discrepancyReducer from './slices/discrepancySlice';  
 import rolesReducer from './slices/rolesSlice'
+import departmentRolesResucer from './slices/departmentRolesSlice'
+
 
 
 const rootReducer = combineReducers({
@@ -25,7 +27,8 @@ const rootReducer = combineReducers({
   kpis: kpiReducer,
   kpiHeaders: kpiHeadersReducer,
  discrepancies: discrepancyReducer ,
- roles: rolesReducer             
+ roles: rolesReducer ,
+ departmentRoles : departmentRolesResucer          
 });
 
 

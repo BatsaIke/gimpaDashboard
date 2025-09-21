@@ -1,133 +1,236 @@
-/* Page Layout */
+/* DepartmentPage.module.css */
 .container {
   padding: 2rem;
   min-height: 100vh;
-  background: #f8fafc;
-  margin-left: 250px;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+padding-left: 200px;
   margin-top: 50px;
+ 
+  
+  color: #eaf7ff;
 }
 
 .pageHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   margin-bottom: 2rem;
 }
 
-h1 {
-  color: #002f5f;
-  margin: 0;
-  font-size: 1.75rem;
+.headerContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
-/* Add Button */
+.titleSection {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.titleIcon {
+  font-size: 2rem;
+  color: #3b82f6;
+}
+
+h1 {
+  color: #f8fafc;
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+.countBadge {
+  background: rgba(59, 130, 246, 0.2);
+  color: #3b82f6;
+  padding: 0.35rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+/* DepartmentPage.module.css */
+
+/* right-side buttons group */
+.buttonRow {
+  display: inline-flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Secondary button (Add Role) */
+.addRoleButton {
+  background: linear-gradient(135deg, #1e40af, #3b82f6);
+  color: white;
+  border: none;
+  padding: 0.85rem 1.1rem;
+  border-radius: 12px;
+  font-size: 0.98rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+.addRoleButton:hover {
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.12), 0 4px 6px rgba(0, 0, 0, 0.06);
+}
+
+
 .addButton {
   background: linear-gradient(135deg, #002F5F 0%, #2CA85C 100%);
   color: white;
   border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 8px;
+  padding: 0.85rem 1.5rem;
+  border-radius: 12px;
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  gap: 0.55rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
 .addButton:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  background: linear-gradient(135deg, #001f3f 0%, #23994c 100%);
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
 }
 
-/* Loading State */
+.controls {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.searchBox, .filterBox {
+  position: relative;
+  flex: 1;
+  min-width: 250px;
+}
+
+.searchIcon, .filterIcon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  z-index: 1;
+}
+
+.searchInput, .filterSelect {
+  width: 100%;
+  padding: 0.85rem 1rem 0.85rem 2.75rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(15, 23, 42, 0.6);
+  color: #f1f5f9;
+  font-size: 0.95rem;
+  backdrop-filter: blur(10px);
+  transition: all 0.2s ease;
+}
+
+.searchInput:focus, .filterSelect:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+.filterSelect {
+  appearance: none;
+  cursor: pointer;
+}
+
 .loadingState {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 3rem;
   gap: 1rem;
+  padding: 4rem 1rem;
 }
 
 .loadingSpinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid rgba(0, 47, 95, 0.1);
+  width: 48px;
+  height: 48px;
+  border: 3px solid rgba(255, 255, 255, 0.15);
   border-radius: 50%;
-  border-top-color: #002F5F;
-  animation: spin 1s ease-in-out infinite;
+  border-top-color: #2CA85C;
+  animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
 
-/* Error State */
 .errorState {
-  background: #FEE2E2;
-  color: #B91C1C;
-  padding: 1rem;
-  border-radius: 8px;
-  margin: 1rem 0;
-  border-left: 4px solid #DC2626;
+  background: rgba(239, 68, 68, 0.15);
+  color: #fecaca;
+  padding: 1.25rem;
+  border-radius: 12px;
+  margin: 1.5rem 0;
+  border-left: 4px solid rgba(239, 68, 68, 0.7);
+  backdrop-filter: blur(10px);
 }
 
-/* Empty State */
 .emptyState {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 3rem;
+  gap: 1rem;
+  padding: 4rem 1.25rem;
   text-align: center;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  margin-top: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
 }
 
-.emptyState img {
-  width: 200px;
-  height: auto;
-  margin-bottom: 1.5rem;
+.emptyIllustration {
+  font-size: 4rem;
+  color: rgba(255, 255, 255, 0.2);
+  margin-bottom: 1rem;
 }
 
 .emptyState h3 {
-  color: #002F5F;
-  margin-bottom: 0.5rem;
+  color: #e2e8f0;
+  margin: 0.5rem 0 0.25rem;
+  font-size: 1.5rem;
 }
 
 .emptyState p {
-  color: #6B7280;
+  color: #94a3b8;
   margin: 0;
+  font-size: 1rem;
 }
 
-/* Grid Layout */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.5rem;
-  margin-top: 1.5rem;
-}
-
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .container {
     margin-left: 0;
     padding: 1.5rem;
   }
-  
-  .pageHeader {
+}
+
+@media (max-width: 768px) {
+  .headerContent {
     flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
   }
   
-  .grid {
-    grid-template-columns: 1fr;
+  .controls {
+    flex-direction: column;
+  }
+  
+  .searchBox, .filterBox {
+    min-width: 100%;
+  }
+  
+  h1 {
+    font-size: 1.75rem;
   }
 }
 
@@ -136,8 +239,8 @@ h1 {
     padding: 1rem;
   }
   
-  h1 {
-    font-size: 1.5rem;
+  .titleSection {
+    flex-wrap: wrap;
   }
   
   .addButton {

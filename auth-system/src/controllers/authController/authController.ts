@@ -1,5 +1,7 @@
 // src/controllers/authController.ts
 import { Request, Response } from "express";
+import DeptRole from "../../models/DeptRole";
+
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../../models/User";
@@ -19,6 +21,7 @@ import {
   getAccessibleDepartmentIdsForStrings,
 } from "../../utils/departments";
 import { Types } from "mongoose";
+import { log } from "console";
 
 const DEFAULT_PASSWORD = "1234567@";
 
@@ -163,37 +166,87 @@ export const refreshToken = async (
   }
 };
 
-/* ------------------------------------------------------------------ */
-/* CREATE USER                                                         */
-/* ------------------------------------------------------------------ */
+
+
 export const createUser = async (req: AuthRequest, res: Response): Promise<void> => {
   const caller = req.authUser;
   if (!caller) return void res.status(401).json({ message: "Unauthorized" });
 
   const {
     username, fullName, email, phone, password,
-    role, department, rank, makeSupervisor,
+    role: incomingRole, department, rank, makeSupervisor,
   } = req.body;
 
-  if (!role) return void res.status(400).json({ message: "Role is required" });
-  if (!ALL_ROLES_ARRAY.includes(role)) {
-    return void res.status(400).json({ message: "Invalid role" });
-  }
-
-  const top = isTopRole(caller.role as SystemRole);
-  const callerIsSuper = isSuperAdmin(caller.role as SystemRole);
-
-  // --- SUPER VISOR SCOPE: department + ALL its children (subtree) ---
-  const callerSupervisedTreeArr = await getSupervisedTreeDeptIdStrings(caller._id as Types.ObjectId);
-  const callerSupervisedTree = new Set(callerSupervisedTreeArr.map(String));
-  const callerIsSupervisor = callerSupervisedTree.size > 0 || !!(caller as any).isSupervisor;
-
-  // normalize to string[]
+  // Normalize departments to string[]
   const deptIds: string[] = Array.isArray(department)
     ? department.map(String)
     : department ? [String(department)] : [];
 
-  // ---------- Non-top scope guard (merge org subtree + supervised subtree) ----------
+  // ---- Role normalization (incoming text takes priority) ----
+  const SYSTEM_ROLE_FALLBACK: SystemRole = "Middle & Junior Staff"; // must exist in ALL_ROLES_ARRAY
+  const rawRole = (incomingRole ?? "").toString().trim();
+
+  let roleToSave: SystemRole = SYSTEM_ROLE_FALLBACK;
+
+  if (rawRole) {
+    // 1) Try as a department role NAME (case-insensitive) within provided departments
+    let deptRoleFound = false;
+
+    if (deptIds.length) {
+      const inScope = await DeptRole.findOne({
+        department: { $in: deptIds },
+        name: rawRole,
+        isActive: true,
+      })
+        .collation({ locale: "en", strength: 2 }) // case-insensitive
+        .select("_id")
+        .lean();
+
+      if (inScope) {
+        deptRoleFound = true;
+        roleToSave = SYSTEM_ROLE_FALLBACK; // store a valid system role; dept-role assignment is separate
+      }
+    }
+
+    // 2) If not found in provided departments, try ANY department (still dept-role name)
+    if (!deptRoleFound) {
+      const anyDept = await DeptRole.findOne({
+        name: rawRole,
+        isActive: true,
+      })
+        .collation({ locale: "en", strength: 2 })
+        .select("_id")
+        .lean();
+
+      if (anyDept) {
+        deptRoleFound = true;
+        roleToSave = SYSTEM_ROLE_FALLBACK;
+      }
+    }
+
+    // 3) If still not found, try as a SYSTEM role
+    if (!deptRoleFound) {
+      if (ALL_ROLES_ARRAY.includes(rawRole)) {
+        roleToSave = rawRole as SystemRole;
+      } else {
+        return void res
+          .status(400)
+          .json({ message: "Invalid role (not a system role and no matching department role)" });
+      }
+    }
+  } else {
+    // No incoming role — use fallback system role
+    roleToSave = SYSTEM_ROLE_FALLBACK;
+  }
+
+  // ---- Scope & permission checks (unchanged) ----
+  const top = isTopRole(caller.role as SystemRole);
+  const callerIsSuper = isSuperAdmin(caller.role as SystemRole);
+
+  const callerSupervisedTreeArr = await getSupervisedTreeDeptIdStrings(caller._id as Types.ObjectId);
+  const callerSupervisedTree = new Set(callerSupervisedTreeArr.map(String));
+  const callerIsSupervisor = callerSupervisedTree.size > 0 || !!(caller as any).isSupervisor;
+
   const baseAccessible = await getAccessibleDepartmentIdsForStrings(caller);
   const accessibleSet = new Set<string>(baseAccessible.map(String));
   for (const id of callerSupervisedTree) accessibleSet.add(String(id));
@@ -208,65 +261,52 @@ export const createUser = async (req: AuthRequest, res: Response): Promise<void>
     }
   }
 
-  // ---------- Role permission (with supervisor override over SUBTREE) ----------
   const allowedTargets = new Set(getAllDescendantRoles(caller.role as SystemRole));
-
-  // Supervisor override applies only if EVERY chosen department lies in caller's supervised subtree
   const allInCallerSupScope =
     callerIsSupervisor && deptIds.length > 0 && deptIds.every((d) => callerSupervisedTree.has(String(d)));
 
   const roleAllowed =
-    allowedTargets.has(role as SystemRole) ||
-    (allInCallerSupScope && !isTopFourRole(role));
+    top ||
+    allowedTargets.has(roleToSave as SystemRole) ||
+    (allInCallerSupScope && !isTopFourRole(roleToSave));
 
-  if (!top && !roleAllowed) {
+  if (!roleAllowed) {
     return void res.status(403).json({
       message: "You cannot create this role",
       allowedTargets: [...allowedTargets],
     });
   }
 
-  // If using the supervisor-override, require explicit departments
-  if (!callerIsSuper && !top && callerIsSupervisor && !deptIds.length) {
-    return void res.status(400).json({
-      message: "Departments are required when creating as a supervisor. Select one or more departments you supervise.",
-    });
-  }
-
-  // If making a supervisor (for non–Super Admin), departments are mandatory
   if (!callerIsSuper && (makeSupervisor === true) && deptIds.length === 0) {
     return void res.status(400).json({
       message: "Departments are required when assigning supervisor (non–Super Admin).",
     });
   }
 
-  // ---------- De-dup identity ----------
   const dupe = await User.findOne({ $or: [{ email }, { phone }, { username }] });
   if (dupe) {
     return void res.status(400).json({ message: "User already exists (email/phone/username)" });
   }
 
-  // ---------- Create (home department = first if many) ----------
+  // Create user (home department = first if many)
   const user = await User.create({
     username, fullName, email, phone,
     password: password ?? DEFAULT_PASSWORD,
-    role,
+    role: roleToSave,
     department: deptIds.length ? deptIds[0] : undefined,
     rank,
   });
 
-  // ---------- Governance assignments ----------
+  // Governance
   if (deptIds.length) {
     const deptObjIds = deptIds.map((id) => new Types.ObjectId(String(id)));
 
-    // 1) Supervisor assignment (explicit only via makeSupervisor)
     if (makeSupervisor === true) {
       if (callerIsSuper) {
         for (const depId of deptObjIds) {
           await Department.addSupervisor(depId, user._id as Types.ObjectId);
         }
       } else if (callerIsSupervisor) {
-        // Supervisors can assign only within their SUPERVISED SUBTREE
         const outOfSupScope = deptIds.filter((d) => !callerSupervisedTree.has(String(d)));
         if (outOfSupScope.length) {
           return void res.status(403).json({
@@ -284,12 +324,9 @@ export const createUser = async (req: AuthRequest, res: Response): Promise<void>
             "Only Super Admin or an existing Supervisor (within their supervised departments) may assign supervisor.",
         });
       }
-
-      // Keep mirror fields in sync
       await syncUserSupervisorMirror(user._id as Types.ObjectId);
     }
 
-    // 2) Head assignment (Top roles only, and only when not assigning supervisor)
     if (top && makeSupervisor !== true) {
       for (const depId of deptObjIds) {
         await Department.setHead(depId, user._id as Types.ObjectId);
@@ -299,6 +336,9 @@ export const createUser = async (req: AuthRequest, res: Response): Promise<void>
 
   res.status(201).json({ message: "User created", user });
 };
+
+
+
 
 
 

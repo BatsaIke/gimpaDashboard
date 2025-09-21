@@ -1,43 +1,36 @@
-/* Card Container */
 .card {
-  background: white;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  border-radius: 14px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
-  height: 100%;
+  min-width: 220px;
 }
 
 .card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
 }
 
-/* Header Section */
+/* Header (compact) */
 .cardHeader {
-  padding: 1.5rem;
-  background: linear-gradient(135deg, #002F5F 0%, #2CA85C 100%);
-  color: white;
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.8rem;
 }
 
 .avatar {
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.avatarIcon {
-  font-size: 1.25rem;
+  display: grid;
+  place-items: center;
   color: white;
+  flex-shrink: 0;
 }
 
 .titleContainer {
@@ -47,7 +40,7 @@
 
 .titleContainer h3 {
   margin: 0;
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 600;
   white-space: nowrap;
   overflow: hidden;
@@ -56,130 +49,102 @@
 
 .categoryBadge {
   display: inline-block;
-  margin-top: 0.25rem;
-  padding: 0.25rem 0.75rem;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 20px;
-  font-size: 0.75rem;
+  margin-top: 0.2rem;
+  padding: 0.2rem 0.6rem;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  font-size: 0.7rem;
   font-weight: 500;
+  color: #f1f5f9;
 }
 
-/* Body Section */
-.cardBody {
-  padding: 1.5rem;
-  flex: 1;
+.viewButton {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #f1f5f9;
+  font-size: 1rem;
+  padding: 0.4rem;
+  border-radius: 8px;
+  transition: background 0.2s ease;
 }
 
-.infoRow {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
-  color: #555;
+.viewButton:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* Modal details */
+.detailRow {
+  margin: 0.5rem 0;
+  color: #111827;
   font-size: 0.9rem;
 }
 
-.infoRow:last-child {
-  margin-bottom: 0;
-}
-
-.icon {
-  width: 16px;
-  color: #2CA85C;
-  flex-shrink: 0;
-}
-
-.infoLabel {
-  font-weight: 600;
-  min-width: 80px;
-  color: #333;
-}
-
-/* Footer Section */
-.cardFooter {
-  padding: 1rem;
-  display: flex;
-  gap: 0.75rem;
-  background: #F8FAFC;
-  border-top: 1px solid #EDF2F7;
-}
-
-.actionButton {
-  flex: 1;
-  padding: 0.5rem;
-  background: #2CA85C;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-size: 0.85rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-}
-
-.actionButton:hover {
-  background: #23994C;
-}
-
-.actionButtonDanger {
-  composes: actionButton;
-  background: #EF4444;
-}
-
-.actionButtonDanger:hover {
-  background: #DC2626;
-}
-
-/* Modal Styles */
+/* Modal actions */
 .modalActions {
   display: flex;
   justify-content: flex-end;
-  gap: 1rem;
-  margin-top: 1.5rem;
+  gap: 0.8rem;
+  margin-top: 1.2rem;
+}
+
+.actionButton,
+.actionButtonDanger,
+.cancelBtn,
+.confirmBtn {
+  padding: 0.5rem 0.9rem;
+  border-radius: 8px;
+  border: none;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: white;
+}
+
+.actionButton {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
+.actionButton:hover {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+}
+
+.actionButtonDanger {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+.actionButtonDanger:hover {
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
 }
 
 .cancelBtn {
-  background: #6B7280;
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.2s ease;
+  background: #6b7280;
 }
 
 .cancelBtn:hover {
-  background: #4B5563;
+  background: #4b5563;
 }
 
 .confirmBtn {
-  background: #EF4444;
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.2s ease;
+  background: #ef4444;
 }
 
 .confirmBtn:hover {
-  background: #DC2626;
+  background: #dc2626;
 }
 
-/* Responsive Design */
+/* Responsive */
 @media (max-width: 480px) {
-  .cardHeader {
-    padding: 1rem;
+  .card {
+    padding: 0.8rem;
   }
-  
-  .cardBody {
-    padding: 1rem;
+  .avatar {
+    width: 36px;
+    height: 36px;
   }
-  
-  .cardFooter {
-    flex-direction: column;
+  .titleContainer h3 {
+    font-size: 0.95rem;
   }
 }

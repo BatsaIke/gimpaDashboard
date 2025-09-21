@@ -41,4 +41,5 @@ router.delete("/departments/:id([0-9a-fA-F]{24})", verifyToken, deleteDepartment
 // scoped list (yours)
 router.get("/departments/scope", verifyToken, getDepartmentsScoped);
 
+
 export default router;

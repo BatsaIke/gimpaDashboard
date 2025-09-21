@@ -1,0 +1,106 @@
+/* Dark card to ensure contrast even if the Modal container is white */
+.card {
+  background: linear-gradient(135deg, #0b1220 0%, #141e2f 100%);
+  color: #e5f0ff;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.35);
+}
+
+.modalFormLike {
+  display: grid;
+  gap: 12px;
+}
+
+.label {
+  font-size: 0.925rem;
+  font-weight: 600;
+  color: #cfe0ff;
+}
+
+.searchInput,
+.filterSelect,
+.textareaLike {
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(14, 22, 38, 0.7);
+  color: #e6edf7;
+  padding: 10px 12px;
+  backdrop-filter: blur(6px);
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.searchInput:focus,
+.filterSelect:focus,
+.textareaLike:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.filterSelect {
+  appearance: none;
+  cursor: pointer;
+}
+
+.textareaLike {
+  min-height: 96px;
+  resize: vertical;
+}
+
+.hint {
+  margin-top: 2px;
+  font-size: 0.85rem;
+  color: #93a4c7;
+}
+
+/* Footer */
+.footerRow {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.cancelButton {
+  background: linear-gradient(135deg, #9ca3af, #6b7280);
+  color: #ffffff;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.saveButton {
+  background: linear-gradient(135deg, #2CA85C, #1f8f50);
+  color: #ffffff;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.saveButton[disabled],
+.cancelButton[disabled] {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Hidden submit so Enter works in inputs */
+.hiddenSubmit {
+  position: absolute;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (max-width: 520px) {
+  .card {
+    padding: 14px;
+    border-radius: 14px;
+  }
+}
