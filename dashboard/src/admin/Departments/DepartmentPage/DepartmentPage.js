@@ -5,7 +5,7 @@ import {
   fetchMyDepartments,
   createDepartment,
   editDepartment,
-  removeDepartment,
+  removeDepartment, 
 } from "../../../actions/departmentsActions";
 import { set_Alert } from "../../../actions/alertAction";
 import styles from "./DepartmentPage.module.css";
