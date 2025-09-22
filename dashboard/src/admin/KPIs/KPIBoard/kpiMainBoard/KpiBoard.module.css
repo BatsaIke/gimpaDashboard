@@ -38,7 +38,6 @@
   width: 100%;
 }
 
-
 .title,
 .academicYear {
   font-size: 1.4rem;
@@ -97,29 +96,41 @@
   font-size: 1.1rem;
 }
 
+/* FIXED: Columns container */
 .columns {
   display: flex;
-  gap: 1rem;
-  padding-bottom: 1rem;
+  gap: 1.5rem;
+  padding: 0.5rem 0.5rem 1rem;
   width: 100%;
   overflow-x: auto;
   scrollbar-width: thin;
-  padding: 0.5rem 0;
+  align-items: flex-start;
 }
 
+/* FIXED: Column container sizing to match KPI cards */
 .column-container {
-  min-width: 280px;
-  flex: 1;
+  min-width: 300px;
+  max-width: 300px;
+  flex: 0 0 auto;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1.5rem;
+  box-sizing: border-box;
 }
 
+/* FIXED: Header section to match column width */
 .headerSection {
-  margin-bottom: 2.5rem;
+  width: 100%;
+  margin-bottom: 1.5rem;
   padding: 1.5rem;
   background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(10px);
   border-radius: 16px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   transition: all 0.3s ease;
+  box-sizing: border-box;
 }
 
 .headerSection:hover {
@@ -192,9 +203,6 @@
   margin: 0;
 }
 
-
-
-
 /* Custom scrollbar */
 .columns::-webkit-scrollbar {
   height: 8px;
@@ -236,6 +244,11 @@
     margin-left: 70px;
     width: calc(100vw - 70px);
   }
+  
+  .column-container {
+    min-width: 280px;
+    max-width: 280px;
+  }
 }
 
 @media (max-width: 768px) {
@@ -259,12 +272,21 @@
   .title {
     font-size: 1.6rem;
   }
-
- 
   
   .createButton {
     width: 100%;
     justify-content: center;
+  }
+  
+  .columns {
+    gap: 1rem;
+    padding: 0.5rem 0.25rem 1rem;
+  }
+  
+  .column-container {
+    min-width: 280px;
+    max-width: 280px;
+    padding: 1.25rem;
   }
 }
 
@@ -287,6 +309,12 @@
   }
   
   .column-container {
-    min-width: 240px;
+    min-width: 260px;
+    max-width: 260px;
+    padding: 1rem;
+  }
+  
+  .headerSection {
+    padding: 1.25rem;
   }
 }
