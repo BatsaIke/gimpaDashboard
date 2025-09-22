@@ -19,6 +19,7 @@ const LoginPage = () => {
     password: false
   });
 
+
   const handleLogin = async (e) => {
     e.preventDefault();
     if (!text || !password) {
@@ -30,13 +31,10 @@ const LoginPage = () => {
     setLoading(false);
 
     if (result.success) {
-      dispatch(set_Alert("Login successful", "success"));
+      dispatch(set_Alert("Login successful", "success")); 
       navigate("/");
-    } else {
-      dispatch(set_Alert("Invalid credentials", "error"));
-    }
-  };
-
+    } 
+  }
   return (
     <motion.div 
       className={styles.container}
