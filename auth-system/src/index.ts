@@ -8,7 +8,8 @@ import type { Request, Response, NextFunction } from "express";
 import passport from "./utils/passportConfig";
 import connectDB from "./config/db";
 import sessionConfig from "./config/sessionConfig";
-import corsConfig from "./middleware/corsConfig"; // Updated import
+// import corsConfig from "./middleware/corsConfig";
+import cors from 'cors'
 import loggingMiddleware from "./middleware/logging";
 import errorHandler from "./middleware/errorHandler";
 
@@ -31,7 +32,7 @@ const isProduction = process.env.NODE_ENV === "production";
 // ---------- Core middleware ----------
 app.use(express.json());
 app.use(cookieParser());
-app.use(corsConfig); // Use your configured CORS
+app.use(cors());
 app.use(loggingMiddleware(isProduction));
 app.use(sessionConfig(isProduction));
 
@@ -43,7 +44,7 @@ app.use(passport.session());
 app.use("/uploads", express.static("uploads"));
 
 // ---------- Explicit preflight handling ----------
-app.options("*", corsConfig);
+// app.options("*", corsConfig);
 
 // ---------- API routes ----------
 app.use("/api/v1/", routes);
