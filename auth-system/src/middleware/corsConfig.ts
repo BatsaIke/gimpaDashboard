@@ -6,6 +6,7 @@ const allowedOrigins = [
   "https://gimpa-dashboard-git-main-batsaikes-projects.vercel.app",
   "https://gimpa-dashboard-6vdcnbce7-batsaikes-projects.vercel.app",
   "http://localhost:3000",
+  "https://gimpadashboard.onrender.com"
 ];
 
 // Helper to allow any *.vercel.app preview deployments
