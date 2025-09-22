@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon --watch src --ext ts,tsx --exec \"ts-node src/index.ts\"",
-  "build-server": "tsc",
-  "build-client": "npm install --prefix ../dashboard && npm run build --prefix ../dashboard",
-  "build": "npm run build-client && npm run build-server",
-  "start": "npm run build && node dist/index.js",
+     "dev": "nodemon --watch src --ext ts,tsx --exec \"ts-node src/index.ts\"",
+    "build-server": "tsc",
+    "build-client": "npm install --prefix ../dashboard && npm run build --prefix ../dashboard",
+    "build": "npm run build-server && npm run build-client",
+    "start": "npm run build && node dist/index.js",
     "typecheck": "tsc --noEmit"
   },
   "keywords": [],
