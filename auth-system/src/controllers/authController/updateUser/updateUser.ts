@@ -5,6 +5,7 @@ import {
   isSuperAdmin,
   getAllDescendantRoles,
   isTopRole,
+  ALL_ROLES_ARRAY,
 } from "../../../utils/rolesAccess";
 import Department from "../../../models/Department";
 import {
@@ -13,6 +14,7 @@ import {
 import { Types } from "mongoose";
 import User from "../../../models/User";
 import { AuthRequest } from "../../../middleware/authMiddleware";
+import DeptRole from "../../../models/DeptRole";
 
 
 
@@ -95,12 +97,6 @@ export const updateUser = async (req: AuthRequest, res: Response): Promise<void>
 
   // ─────────────────────────────────────────────────────────────
   // 0) BLOCK: juniors cannot edit seniors who can act on them
-  //    (covers "you should not be able to edit the one that made you a supervisor"
-  //     without requiring an explicit audit trail):
-  //    - If caller is non-Top and has supervisor power, and target is a supervisor:
-  //        a) target supervises caller's home dept  OR
-  //        b) target supervises any dept inside caller's supervised subtree (overlap)
-  //    => forbid
   // ─────────────────────────────────────────────────────────────
   if (!isTop && callerIsSupervisor && targetIsSupervisor) {
     const targetSupervisesCallerHome = callerDeptId && targetSupervisedTree.has(callerDeptId);
@@ -126,42 +122,118 @@ export const updateUser = async (req: AuthRequest, res: Response): Promise<void>
   }
 
   // ─────────────────────────────────────────────────────────────
-  // 2) Parse inputs
+  // 2) Parse inputs - IMPORTANT: Handle role normalization like createUser
   // ─────────────────────────────────────────────────────────────
   const {
-    fullName, username, email, phone, role, department, rank,
+    fullName, username, email, phone, role: incomingRole, department, rank,
     // Governance
-    makeSupervisor,                    // boolean | undefined
-    supervisorDepartmentIds = [],      // string[]
-    setAsHead,                         // boolean | undefined (TOP only)
-    headDepartmentIds = [],            // string[] (TOP only)
-    removeSupervisorFrom = [],         // string[]
-    clearHeadFrom = [],                // string[] (TOP only)
+    makeSupervisor,
+    supervisorDepartmentIds = [],
+    setAsHead,
+    headDepartmentIds = [],
+    removeSupervisorFrom = [],
+    clearHeadFrom = [],
   } = req.body;
 
-  // ─────────────────────────────────────────────────────────────
-  // 3) Role change rules (non-Top callers)
-  // ─────────────────────────────────────────────────────────────
-  if (role !== undefined && !isTop) {
-    const allowedTargets = new Set(getAllDescendantRoles(callerRole));
-    let roleAllowed = allowedTargets.has(role as SystemRole);
+  // Normalize departments to string[] for role checking
+  const deptIds: string[] = department !== undefined
+    ? (Array.isArray(department) ? department.map(String) : [String(department)])
+    : target.department ? [String(target.department)] : [];
 
+  // ─────────────────────────────────────────────────────────────
+  // 3) ROLE NORMALIZATION (Like createUser)
+  // ─────────────────────────────────────────────────────────────
+  const SYSTEM_ROLE_FALLBACK: SystemRole = "Middle & Junior Staff";
+  let roleToSave: SystemRole | undefined;
+
+  if (incomingRole !== undefined) {
+    const rawRole = incomingRole.toString().trim();
+    
+    if (rawRole) {
+      let deptRoleFound = false;
+
+      // 1) Try as a department role NAME within provided departments
+      if (deptIds.length) {
+        const inScope = await DeptRole.findOne({
+          department: { $in: deptIds },
+          name: rawRole,
+          isActive: true,
+        })
+          .collation({ locale: "en", strength: 2 })
+          .select("_id")
+          .lean();
+
+        if (inScope) {
+          deptRoleFound = true;
+          roleToSave = SYSTEM_ROLE_FALLBACK; // Store valid system role
+        }
+      }
+
+      // 2) If not found in provided departments, try ANY department
+      if (!deptRoleFound) {
+        const anyDept = await DeptRole.findOne({
+          name: rawRole,
+          isActive: true,
+        })
+          .collation({ locale: "en", strength: 2 })
+          .select("_id")
+          .lean();
+
+        if (anyDept) {
+          deptRoleFound = true;
+          roleToSave = SYSTEM_ROLE_FALLBACK;
+        }
+      }
+
+      // 3) If still not found, try as a SYSTEM role
+      if (!deptRoleFound) {
+        if (ALL_ROLES_ARRAY.includes(rawRole)) {
+          roleToSave = rawRole as SystemRole;
+        } else {
+          return void res.status(400).json({ 
+            message: "Invalid role (not a system role and no matching department role)" 
+          });
+        }
+      }
+    } else {
+      // Empty role string - use fallback
+      roleToSave = SYSTEM_ROLE_FALLBACK;
+    }
+  }
+
+  // ─────────────────────────────────────────────────────────────
+  // 4) Role change rules (non-Top callers) - UPDATED for dynamic roles
+  // ─────────────────────────────────────────────────────────────
+  if (roleToSave !== undefined && !isTop) {
+    const allowedTargets = new Set(getAllDescendantRoles(callerRole));
+    let roleAllowed = allowedTargets.has(roleToSave as SystemRole);
+
+    // Allow department roles within supervised scope (except top 4 roles)
     if (
       !roleAllowed &&
       callerIsSupervisor &&
       targetDeptId &&
-      !["Super Admin","Rector","Deputy Rector","Secretary of the Institute"].includes(role) &&
+      !TOP4_ROLES.includes(roleToSave) &&
       callerSupervisedTree.has(String(targetDeptId))
     ) {
-      roleAllowed = true;
+      // Check if it's a department role
+      const isDeptRole = await DeptRole.findOne({
+        name: incomingRole.toString().trim(),
+        isActive: true,
+      });
+      
+      if (isDeptRole) {
+        roleAllowed = true;
+      }
     }
+
     if (!roleAllowed) {
       return void res.status(403).json({ message: "Forbidden (cannot set this role)" });
     }
   }
 
   // ─────────────────────────────────────────────────────────────
-  // 4) Changing home department? (single) – merge org scope + supervised subtree
+  // 5) Changing home department? (single) – merge org scope + supervised subtree
   // ─────────────────────────────────────────────────────────────
   if (department !== undefined && !isTop) {
     const newDeptIds: string[] = Array.isArray(department) ? department.map(String) : [String(department)];
@@ -188,14 +260,14 @@ export const updateUser = async (req: AuthRequest, res: Response): Promise<void>
     ...(username !== undefined ? { username } : {}),
     ...(email !== undefined ? { email } : {}),
     ...(phone !== undefined ? { phone } : {}),
-    ...(role !== undefined ? { role } : {}),
+    ...(roleToSave !== undefined ? { role: roleToSave } : {}), // Use normalized role
     ...(department !== undefined ? { department: nextDept } : {}),
     ...(rank !== undefined ? { rank } : {}),
   });
   await target.save();
 
   // ─────────────────────────────────────────────────────────────
-  // 5) Governance updates (Supervisor / Head)
+  // 6) Governance updates (Supervisor / Head) - UNCHANGED
   // ─────────────────────────────────────────────────────────────
   const supIds = (supervisorDepartmentIds || []).map(String);
   const rmSupIds = (removeSupervisorFrom || []).map(String);
