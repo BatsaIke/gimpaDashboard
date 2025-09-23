@@ -21,7 +21,6 @@ import {
   getAccessibleDepartmentIdsForStrings,
 } from "../../utils/departments";
 import { Types } from "mongoose";
-import { log } from "console";
 
 const DEFAULT_PASSWORD = "1234567@";
 
